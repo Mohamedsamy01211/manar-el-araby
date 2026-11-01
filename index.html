@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,143 +6,244 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manar El Araby</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#263247}
-header{background:#fff;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px #0001}
+body{
+  margin:0;font-family:Arial,sans-serif;color:#263247;
+  background:#f5f3f8;min-height:100vh
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background-image:url("https://cdn.phototourl.com/member/2026-11-01-e106abc0-28e7-414c-8330-02e1ce1a71e3.jpg");
+  background-size:cover;background-position:center;
+  background-attachment:fixed;opacity:.23
+}
+body:after{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:rgba(248,247,251,.55);pointer-events:none
+}
+header{
+  background:rgba(255,255,255,.88);backdrop-filter:blur(10px);
+  padding:18px 25px;display:flex;justify-content:space-between;
+  align-items:center;box-shadow:0 2px 8px #0001;gap:10px
+}
 h1{font-size:22px;color:#7254a5;margin:0}
-nav{display:flex;gap:8px;flex-wrap:wrap;padding:15px;background:#fff}
-nav button,button{border:0;border-radius:8px;padding:11px 15px;background:#7254a5;color:white;cursor:pointer}
+nav{
+  display:flex;gap:8px;flex-wrap:wrap;padding:15px;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(10px)
+}
+button{
+  border:0;border-radius:8px;padding:11px 15px;
+  background:#7254a5;color:white;cursor:pointer
+}
 nav button{background:#eee;color:#333}
 nav button.active{background:#7254a5;color:white}
 main{padding:22px;max-width:1100px;margin:auto}
-.card{background:white;padding:20px;border-radius:12px;margin-bottom:16px;box-shadow:0 2px 8px #0001}
+.card{
+  background:rgba(255,255,255,.91);backdrop-filter:blur(8px);
+  padding:20px;border-radius:12px;margin-bottom:16px;
+  box-shadow:0 2px 8px #0001
+}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px}
 .number{font-size:28px;font-weight:bold;color:#7254a5;margin-top:10px}
-input,select{padding:11px;border:1px solid #ddd;border-radius:7px;width:100%;margin:6px 0 14px}
+input,select,textarea{
+  padding:11px;border:1px solid #ddd;border-radius:7px;
+  width:100%;margin:6px 0 14px;background:white
+}
 label{font-size:14px;font-weight:bold}
 form{max-width:500px}
-table{width:100%;border-collapse:collapse;background:white}
+table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.85)}
 th,td{text-align:left;padding:12px;border-bottom:1px solid #eee}
 th{background:#f7f4fb}
 .hidden{display:none}
 .muted{color:#777;font-size:13px}
 .danger{background:#c84b4b}
+.success{color:#16834a}
 #login{max-width:400px;margin:70px auto}
-@media(max-width:600px){main{padding:12px}header{padding:15px}nav{gap:5px}nav button{padding:9px;font-size:12px}}
+.status-select{min-width:150px}
+.small-button{padding:7px 10px;font-size:13px}
+.top-actions{display:flex;gap:8px;align-items:center}
+[dir="rtl"]{text-align:right}
+[dir="rtl"] th,[dir="rtl"] td{text-align:right}
+@media(max-width:600px){
+  main{padding:12px}header{padding:15px}
+  nav{gap:5px}nav button{padding:9px;font-size:12px}
+  .card{padding:14px}
+}
 </style>
 </head>
+
 <body>
 
 <header>
   <h1>Manar El Araby</h1>
-  <button id="logout" class="hidden" onclick="logout()">Log out</button>
+  <div class="top-actions">
+    <button id="languageButton" onclick="toggleLanguage()">العربية</button>
+    <button id="logout" class="hidden" onclick="logout()">Log out</button>
+  </div>
 </header>
 
 <section id="login" class="card">
-  <h2>Welcome, Manar!</h2>
-  <p class="muted">Sign in to manage your students and lessons.</p>
+  <h2 data-en="Welcome, Manar!" data-ar="أهلاً يا منار!">Welcome, Manar!</h2>
+  <p class="muted" data-en="Sign in to manage your students and lessons." data-ar="سجلي الدخول لإدارة الطلاب والحصص.">Sign in to manage your students and lessons.</p>
   <form onsubmit="login(event)">
-    <label>Email</label>
+    <label data-en="Email" data-ar="البريد الإلكتروني">Email</label>
     <input id="email" type="email" required placeholder="Email address">
-    <label>Password</label>
+    <label data-en="Password" data-ar="كلمة المرور">Password</label>
     <input id="password" type="password" required placeholder="Password">
-    <button type="submit">Sign in</button>
+    <button type="submit" data-en="Sign in" data-ar="تسجيل الدخول">Sign in</button>
   </form>
   <p id="loginMessage" class="muted"></p>
 </section>
 
 <div id="app" class="hidden">
 <nav>
-  <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
-  <button onclick="showPage('students',this)">Students</button>
-  <button onclick="showPage('groups',this)">Groups</button>
-  <button onclick="showPage('lessons',this)">Schedule</button>
-  <button onclick="showPage('payments',this)">Payments</button>
+  <button class="active" onclick="showPage('dashboard',this)" data-en="Dashboard" data-ar="الرئيسية">Dashboard</button>
+  <button onclick="showPage('students',this)" data-en="Students" data-ar="الطلاب">Students</button>
+  <button onclick="showPage('groups',this)" data-en="Groups" data-ar="المجموعات">Groups</button>
+  <button onclick="showPage('lessons',this)" data-en="Schedule" data-ar="الجدول">Schedule</button>
+  <button onclick="showPage('attendance',this)" data-en="Attendance" data-ar="الحضور">Attendance</button>
+  <button onclick="showPage('payments',this)" data-en="Payments" data-ar="المدفوعات">Payments</button>
 </nav>
 
 <main>
+
 <section id="dashboard">
-  <h2>Dashboard</h2>
+  <h2 data-en="Dashboard" data-ar="الرئيسية">Dashboard</h2>
   <div class="cards">
-    <div class="card">Total Students<div class="number" id="totalStudents">0</div></div>
-    <div class="card">Total Groups<div class="number" id="totalGroups">0</div></div>
-    <div class="card">Outstanding Payments<div class="number" id="outstanding">0</div></div>
+    <div class="card"><span data-en="Total Students" data-ar="إجمالي الطلاب">Total Students</span><div class="number" id="totalStudents">0</div></div>
+    <div class="card"><span data-en="Total Groups" data-ar="إجمالي المجموعات">Total Groups</span><div class="number" id="totalGroups">0</div></div>
+    <div class="card"><span data-en="Outstanding Payments" data-ar="المبالغ المتبقية">Outstanding Payments</span><div class="number" id="outstanding">0</div></div>
   </div>
   <div class="card">
-    <h3>Students per Group</h3>
+    <h3 data-en="Students per Group" data-ar="عدد الطلاب في كل مجموعة">Students per Group</h3>
     <div id="groupSummary">No groups yet.</div>
   </div>
 </section>
 
 <section id="students" class="hidden">
-  <h2>Students</h2>
+  <h2 data-en="Students" data-ar="الطلاب">Students</h2>
   <div class="card">
-    <h3>Add Student</h3>
+    <h3 data-en="Add Student" data-ar="إضافة طالب">Add Student</h3>
     <form onsubmit="addStudent(event)">
-      <label>Student Name</label><input id="studentName" required>
-      <label>Group</label><select id="studentGroup"><option value="">No group</option></select>
-      <label>Package Price</label><input id="studentPrice" type="number" min="0" value="0">
-      <label>Amount Paid</label><input id="studentPaid" type="number" min="0" value="0">
-      <label>Total Lessons</label><input id="studentTotal" type="number" min="0" value="8">
-      <button type="submit">Add Student</button>
+      <label data-en="Student Name" data-ar="اسم الطالب">Student Name</label>
+      <input id="studentName" required>
+      <label data-en="Group" data-ar="المجموعة">Group</label>
+      <select id="studentGroup"><option value="">No group</option></select>
+      <label data-en="Package Price" data-ar="سعر الباقة">Package Price</label>
+      <input id="studentPrice" type="number" min="0" value="0">
+      <label data-en="Amount Paid" data-ar="المبلغ المدفوع">Amount Paid</label>
+      <input id="studentPaid" type="number" min="0" value="0">
+      <label data-en="Total Lessons" data-ar="إجمالي الحصص">Total Lessons</label>
+      <input id="studentTotal" type="number" min="0" value="8">
+      <button type="submit" data-en="Add Student" data-ar="إضافة الطالب">Add Student</button>
     </form>
   </div>
   <div class="card">
-    <h3>Students List</h3>
+    <h3 data-en="Students List" data-ar="قائمة الطلاب">Students List</h3>
     <div style="overflow-x:auto"><table>
-      <thead><tr><th>Name</th><th>Group</th><th>Price</th><th>Paid</th><th>Remaining</th><th>Lessons Left</th></tr></thead>
+      <thead><tr>
+        <th data-en="Name" data-ar="الاسم">Name</th>
+        <th data-en="Group" data-ar="المجموعة">Group</th>
+        <th data-en="Price" data-ar="السعر">Price</th>
+        <th data-en="Paid" data-ar="المدفوع">Paid</th>
+        <th data-en="Remaining" data-ar="المتبقي">Remaining</th>
+        <th data-en="Lessons Left" data-ar="الحصص المتبقية">Lessons Left</th>
+      </tr></thead>
       <tbody id="studentsList"></tbody>
     </table></div>
   </div>
 </section>
 
 <section id="groups" class="hidden">
-  <h2>Groups</h2>
+  <h2 data-en="Groups" data-ar="المجموعات">Groups</h2>
   <div class="card">
-    <h3>Add Group</h3>
+    <h3 data-en="Add Group" data-ar="إضافة مجموعة">Add Group</h3>
     <form onsubmit="addGroup(event)">
-      <label>Group Name</label><input id="groupName" required>
-      <label>Schedule</label><input id="groupSchedule" placeholder="Sunday & Tuesday - 5:00 PM">
-      <label>Monthly Price</label><input id="groupPrice" type="number" min="0" value="0">
-      <label>Maximum Students</label><input id="groupMax" type="number" min="1" value="10">
-      <button type="submit">Add Group</button>
+      <label data-en="Group Name" data-ar="اسم المجموعة">Group Name</label>
+      <input id="groupName" required>
+      <label data-en="Schedule" data-ar="المواعيد">Schedule</label>
+      <input id="groupSchedule" placeholder="Sunday & Tuesday - 5:00 PM">
+      <label data-en="Monthly Price" data-ar="السعر الشهري">Monthly Price</label>
+      <input id="groupPrice" type="number" min="0" value="0">
+      <label data-en="Maximum Students" data-ar="الحد الأقصى للطلاب">Maximum Students</label>
+      <input id="groupMax" type="number" min="1" value="10">
+      <button type="submit" data-en="Add Group" data-ar="إضافة المجموعة">Add Group</button>
     </form>
   </div>
-  <div class="card"><h3>Groups List</h3><div id="groupsList"></div></div>
+  <div class="card"><h3 data-en="Groups List" data-ar="قائمة المجموعات">Groups List</h3><div id="groupsList"></div></div>
 </section>
 
 <section id="lessons" class="hidden">
-  <h2>Schedule</h2>
+  <h2 data-en="Schedule" data-ar="الجدول">Schedule</h2>
   <div class="card">
-    <h3>Add Lesson</h3>
+    <h3 data-en="Add Lesson" data-ar="إضافة حصة">Add Lesson</h3>
     <form onsubmit="addLesson(event)">
-      <label>Lesson Title</label><input id="lessonTitle" required>
-      <label>Group</label><select id="lessonGroup" required></select>
-      <label>Lesson Date</label><input id="lessonDate" type="date" required>
-      <label>Day</label>
+      <label data-en="Lesson Title" data-ar="اسم الحصة">Lesson Title</label>
+      <input id="lessonTitle" required>
+      <label data-en="Group" data-ar="المجموعة">Group</label>
+      <select id="lessonGroup" required></select>
+      <label data-en="Lesson Date" data-ar="تاريخ الحصة">Lesson Date</label>
+      <input id="lessonDate" type="date" required>
+      <label data-en="Day" data-ar="اليوم">Day</label>
       <select id="lessonDay">
         <option>Sunday</option><option>Monday</option><option>Tuesday</option>
-        <option>Wednesday</option><option>Thursday</option>
+        <option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option>
       </select>
-      <label>Start Time</label><input id="startTime" type="time" required>
-      <label>End Time</label><input id="endTime" type="time" required>
-      <button type="submit">Add Lesson</button>
+      <label data-en="Start Time" data-ar="وقت البداية">Start Time</label>
+      <input id="startTime" type="time" required>
+      <label data-en="End Time" data-ar="وقت النهاية">End Time</label>
+      <input id="endTime" type="time" required>
+      <button type="submit" data-en="Add Lesson" data-ar="إضافة الحصة">Add Lesson</button>
     </form>
   </div>
-  <div class="card"><h3>Lessons List</h3><div id="lessonsList"></div></div>
+  <div class="card"><h3 data-en="Lessons List" data-ar="قائمة الحصص">Lessons List</h3><div id="lessonsList"></div></div>
+</section>
+
+<section id="attendance" class="hidden">
+  <h2 data-en="Attendance" data-ar="الحضور والغياب">Attendance</h2>
+  <div class="card">
+    <h3 data-en="Select Lesson" data-ar="اختيار الحصة">Select Lesson</h3>
+    <label data-en="Lesson" data-ar="الحصة">Lesson</label>
+    <select id="attendanceLesson" onchange="loadAttendance()">
+      <option value="">Select a lesson</option>
+    </select>
+    <p class="muted" data-en="Choose a lesson to display its students." data-ar="اختاري الحصة لعرض أسماء الطلاب.">Choose a lesson to display its students.</p>
+  </div>
+  <div class="card hidden" id="attendanceCard">
+    <h3 data-en="Students Attendance" data-ar="تسجيل حضور الطلاب">Students Attendance</h3>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th data-en="Student" data-ar="الطالب">Student</th>
+          <th data-en="Attendance Status" data-ar="حالة الحضور">Attendance Status</th>
+        </tr></thead>
+        <tbody id="attendanceList"></tbody>
+      </table>
+    </div>
+    <p class="muted" data-en="Present and Absent count as a lesson. Excused does not count." data-ar="الحاضر والغائب بدون إذن تُحسب لهما حصة. الغياب بإذن لا يُحسب.">Present and Absent count as a lesson. Excused does not count.</p>
+    <button onclick="saveAttendance()" data-en="Save Attendance" data-ar="حفظ الحضور">Save Attendance</button>
+    <p id="attendanceMessage" class="muted"></p>
+  </div>
 </section>
 
 <section id="payments" class="hidden">
-  <h2>Payments</h2>
+  <h2 data-en="Payments" data-ar="المدفوعات">Payments</h2>
   <div class="card">
-    <h3>Payment Overview</h3>
+    <h3 data-en="Payment Overview" data-ar="ملخص المدفوعات">Payment Overview</h3>
     <div style="overflow-x:auto"><table>
-      <thead><tr><th>Student</th><th>Package Price</th><th>Paid</th><th>Remaining</th></tr></thead>
+      <thead><tr>
+        <th data-en="Student" data-ar="الطالب">Student</th>
+        <th data-en="Package Price" data-ar="سعر الباقة">Package Price</th>
+        <th data-en="Paid" data-ar="المدفوع">Paid</th>
+        <th data-en="Remaining" data-ar="المتبقي">Remaining</th>
+      </tr></thead>
       <tbody id="paymentsList"></tbody>
     </table></div>
   </div>
 </section>
+
 </main>
 </div>
 
@@ -154,25 +256,43 @@ let currentUser = null;
 let students = [];
 let groups = [];
 let lessons = [];
+let currentLang = "en";
+
+function toggleLanguage(){
+  currentLang = currentLang === "en" ? "ar" : "en";
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === "ar" ? "rtl" : "ltr";
+  document.getElementById("languageButton").textContent =
+    currentLang === "en" ? "العربية" : "English";
+
+  document.querySelectorAll("[data-en][data-ar]").forEach(el=>{
+    el.textContent = el.dataset[currentLang];
+  });
+}
+
+function tr(en,ar){
+  return currentLang === "ar" ? ar : en;
+}
 
 function showPage(id,button){
   document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   button.classList.add("active");
+  if(id === "attendance") loadAttendanceOptions();
 }
 
 async function login(e){
   e.preventDefault();
   const msg=document.getElementById("loginMessage");
-  msg.textContent="Signing in...";
+  msg.textContent=tr("Signing in...","جاري تسجيل الدخول...");
   const {data,error}=await db.auth.signInWithPassword({
     email:document.getElementById("email").value,
     password:document.getElementById("password").value
   });
   if(error){msg.textContent=error.message;return;}
   currentUser=data.user;
-  openApp();
+  await openApp();
 }
 
 async function logout(){
@@ -197,7 +317,7 @@ async function loadData(){
     db.from("lessons").select("*").order("lesson_date",{ascending:true})
   ]);
   if(s.error||g.error||l.error){
-    alert("Could not load data. Please check your database settings.");
+    alert(tr("Could not load data. Check database settings and policies.","تعذر تحميل البيانات. راجعي إعدادات قاعدة البيانات والصلاحيات."));
     console.error(s.error,g.error,l.error);
     return;
   }
@@ -213,40 +333,43 @@ function render(){
   document.getElementById("outstanding").textContent=
     students.reduce((sum,s)=>sum+Number(s.package_price||0)-Number(s.paid||0),0).toLocaleString();
 
-  const groupOptions='<option value="">No group</option>'+groups.map(g=>
-    `<option value="${g.id}">${esc(g.name)}</option>`).join("");
-  document.getElementById("studentGroup").innerHTML=groupOptions;
-  document.getElementById("lessonGroup").innerHTML=groups.map(g=>
-    `<option value="${g.id}">${esc(g.name)}</option>`).join("");
+  document.getElementById("studentGroup").innerHTML=
+    `<option value="">${tr("No group","بدون مجموعة")}</option>`+
+    groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
+
+  document.getElementById("lessonGroup").innerHTML=
+    groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
 
   document.getElementById("studentsList").innerHTML=students.map(s=>{
     const group=groups.find(g=>g.id===s.group_id);
     return `<tr><td>${esc(s.name)}</td><td>${group?esc(group.name):"-"}</td>
     <td>${money(s.package_price)}</td><td>${money(s.paid)}</td>
     <td>${money(Number(s.package_price)-Number(s.paid))}</td>
-    <td>${Number(s.total_lessons||0)-Number(s.completed_lessons||0)}</td></tr>`;
+    <td>${Math.max(0,Number(s.total_lessons||0)-Number(s.completed_lessons||0))}</td></tr>`;
   }).join("");
 
   document.getElementById("groupsList").innerHTML=groups.map(g=>{
     const count=students.filter(s=>s.group_id===g.id).length;
-    return `<p><b>${esc(g.name)}</b> — ${count} students / ${g.max_students||"-"} max
-    <br><span class="muted">${esc(g.schedule||"No schedule set")}</span></p>`;
-  }).join("")||"No groups yet.";
+    return `<p><b>${esc(g.name)}</b> — ${count} ${tr("students","طلاب")} / ${g.max_students||"-"} ${tr("max","حد أقصى")}
+    <br><span class="muted">${esc(g.schedule||tr("No schedule set","لا يوجد موعد محدد"))}</span></p>`;
+  }).join("")||tr("No groups yet.","لا توجد مجموعات حتى الآن.");
 
   document.getElementById("groupSummary").innerHTML=groups.map(g=>
-    `<p>${esc(g.name)}: ${students.filter(s=>s.group_id===g.id).length} students</p>`
-  ).join("")||"No groups yet.";
+    `<p>${esc(g.name)}: ${students.filter(s=>s.group_id===g.id).length} ${tr("students","طلاب")}</p>`
+  ).join("")||tr("No groups yet.","لا توجد مجموعات حتى الآن.");
 
   document.getElementById("lessonsList").innerHTML=lessons.map(l=>{
     const group=groups.find(g=>g.id===l.group_id);
     return `<p><b>${esc(l.title)}</b> — ${group?esc(group.name):"-"}<br>
-    ${esc(l.lesson_date||"")} | ${esc(l.day)} | ${esc(l.start_time)} - ${esc(l.end_time)}</p>`;
-  }).join("")||"No lessons yet.";
+    ${esc(l.lesson_date||"")} | ${esc(l.day||"")} | ${esc(l.start_time||"")} - ${esc(l.end_time||"")}</p>`;
+  }).join("")||tr("No lessons yet.","لا توجد حصص حتى الآن.");
 
   document.getElementById("paymentsList").innerHTML=students.map(s=>
     `<tr><td>${esc(s.name)}</td><td>${money(s.package_price)}</td>
     <td>${money(s.paid)}</td><td>${money(Number(s.package_price)-Number(s.paid))}</td></tr>`
   ).join("");
+
+  loadAttendanceOptions();
 }
 
 async function addStudent(e){
@@ -281,7 +404,7 @@ async function addLesson(e){
   e.preventDefault();
   const start=document.getElementById("startTime").value;
   const end=document.getElementById("endTime").value;
-  if(end<=start){alert("End time must be after start time.");return;}
+  if(end<=start){alert(tr("End time must be after start time.","وقت النهاية لازم يكون بعد وقت البداية."));return;}
   const {error}=await db.from("lessons").insert({
     user_id:currentUser.id,
     title:document.getElementById("lessonTitle").value,
@@ -295,9 +418,128 @@ async function addLesson(e){
   e.target.reset();await loadData();
 }
 
+function loadAttendanceOptions(){
+  const select=document.getElementById("attendanceLesson");
+  if(!select)return;
+  const previous=select.value;
+  select.innerHTML=`<option value="">${tr("Select a lesson","اختاري الحصة")}</option>`+
+    lessons.map(l=>{
+      const group=groups.find(g=>g.id===l.group_id);
+      return `<option value="${l.id}">${esc(l.title)} — ${esc(group?.name||"")} — ${esc(l.lesson_date||"")}</option>`;
+    }).join("");
+  if(previous && lessons.some(l=>l.id===previous))select.value=previous;
+}
+
+async function loadAttendance(){
+  const lessonId=document.getElementById("attendanceLesson").value;
+  const card=document.getElementById("attendanceCard");
+  const list=document.getElementById("attendanceList");
+  document.getElementById("attendanceMessage").textContent="";
+  if(!lessonId){card.classList.add("hidden");return;}
+
+  const lesson=lessons.find(l=>l.id===lessonId);
+  if(!lesson || !lesson.lesson_date){
+    alert(tr("This lesson has no date.","الحصة دي مش مسجل لها تاريخ."));
+    card.classList.add("hidden");return;
+  }
+
+  const lessonStudents=students.filter(s=>s.group_id===lesson.group_id);
+  if(!lessonStudents.length){
+    list.innerHTML=`<tr><td colspan="2">${tr("No students in this group.","لا يوجد طلاب في المجموعة دي.")}</td></tr>`;
+    card.classList.remove("hidden");return;
+  }
+
+  const {data,error}=await db.from("lesson_attendance")
+    .select("student_id,status")
+    .eq("lesson_id",lessonId)
+    .eq("attendance_date",lesson.lesson_date);
+
+  if(error){
+    alert(tr("Could not load attendance: ","تعذر تحميل الحضور: ")+error.message);
+    return;
+  }
+
+  const saved={};
+  (data||[]).forEach(a=>saved[a.student_id]=a.status);
+
+  list.innerHTML=lessonStudents.map(s=>{
+    const status=saved[s.id]||"Present";
+    return `<tr>
+      <td>${esc(s.name)}</td>
+      <td>
+        <select class="status-select attendance-status" data-student-id="${s.id}">
+          <option value="Present" ${status==="Present"?"selected":""}>${tr("Present - counts","حاضر - تُحسب حصة")}</option>
+          <option value="Absent" ${status==="Absent"?"selected":""}>${tr("Absent - counts","غائب بدون إذن - تُحسب حصة")}</option>
+          <option value="Excused" ${status==="Excused"?"selected":""}>${tr("Excused - does not count","غائب بإذن - لا تُحسب")}</option>
+        </select>
+      </td>
+    </tr>`;
+  }).join("");
+
+  card.classList.remove("hidden");
+}
+
+async function saveAttendance(){
+  const lessonId=document.getElementById("attendanceLesson").value;
+  const lesson=lessons.find(l=>l.id===lessonId);
+  if(!lesson)return;
+
+  const selects=[...document.querySelectorAll(".attendance-status")];
+  if(!selects.length){
+    alert(tr("There are no students to save.","لا يوجد طلاب لحفظ حضورهم."));
+    return;
+  }
+
+  const rows=selects.map(el=>({
+    student_id:el.dataset.studentId,
+    lesson_id:lessonId,
+    attendance_date:lesson.lesson_date,
+    status:el.value
+  }));
+
+  const message=document.getElementById("attendanceMessage");
+  message.textContent=tr("Saving...","جاري الحفظ...");
+
+  const {error}=await db.from("lesson_attendance").upsert(rows,{
+    onConflict:"student_id,lesson_id,attendance_date"
+  });
+
+  if(error){
+    message.textContent=tr("Save failed: ","فشل الحفظ: ")+error.message;
+    return;
+  }
+
+  for(const student of students.filter(s=>s.group_id===lesson.group_id)){
+    const {count,error:countError}=await db.from("lesson_attendance")
+      .select("id",{count:"exact",head:true})
+      .eq("student_id",student.id)
+      .in("status",["Present","Absent"]);
+
+    if(countError){
+      message.textContent=tr("Attendance saved, but lesson totals could not be updated: ","تم حفظ الحضور لكن تعذر تحديث عدد الحصص: ")+countError.message;
+      return;
+    }
+
+    const {error:updateError}=await db.from("students")
+      .update({completed_lessons:count||0})
+      .eq("id",student.id);
+
+    if(updateError){
+      message.textContent=tr("Attendance saved, but a student total could not be updated: ","تم حفظ الحضور لكن تعذر تحديث رصيد أحد الطلاب: ")+updateError.message;
+      return;
+    }
+  }
+
+  message.textContent=tr("Attendance saved successfully.","تم حفظ الحضور بنجاح.");
+  message.classList.add("success");
+  await loadData();
+  await loadAttendance();
+}
+
 function money(value){
   return Number(value||0).toLocaleString("en-EG")+" EGP";
 }
+
 function esc(value){
   return String(value??"").replace(/[&<>"']/g,c=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -305,7 +547,10 @@ function esc(value){
 }
 
 db.auth.getSession().then(({data})=>{
-  if(data.session){currentUser=data.session.user;openApp();}
+  if(data.session){
+    currentUser=data.session.user;
+    openApp();
+  }
 });
 </script>
 </body>
