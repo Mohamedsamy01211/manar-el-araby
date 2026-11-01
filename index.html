@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,32 +7,78 @@
 <title>Manar El Araby</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#263247;background:#f5f3f8;min-height:100vh}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:#263247;background:#f5f3f8;min-height:100vh}
 body:before{content:"";position:fixed;inset:0;z-index:-2;background-image:url("https://cdn.phototourl.com/member/2026-11-01-e106abc0-28e7-414c-8330-02e1ce1a71e3.jpg");background-size:cover;background-position:center;background-attachment:fixed;opacity:.38}
 body:after{content:"";position:fixed;inset:0;z-index:-1;background:rgba(248,247,251,.30);pointer-events:none}
 header{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);padding:14px 22px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px #0001;gap:10px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:12px}.brand img{width:54px;height:54px;object-fit:cover;border-radius:50%;border:2px solid #7254a5}h1{font-size:22px;color:#7254a5;margin:0}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:54px;height:54px;object-fit:cover;border-radius:50%;border:2px solid #7254a5}
+h1{font-size:22px;color:#7254a5;margin:0}
 nav{display:flex;gap:8px;flex-wrap:wrap;padding:15px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px)}
-button{border:0;border-radius:8px;padding:11px 15px;background:#7254a5;color:white;cursor:pointer}nav button{background:#eee;color:#333}nav button.active{background:#7254a5;color:white}
-main{padding:22px;max-width:1150px;margin:auto}.card{background:rgba(255,255,255,.94);backdrop-filter:blur(8px);padding:20px;border-radius:12px;margin-bottom:16px;box-shadow:0 2px 8px #0001}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px}.number{font-size:28px;font-weight:bold;color:#7254a5;margin-top:10px}
-input,select,textarea{padding:11px;border:1px solid #ddd;border-radius:7px;width:100%;margin:6px 0 14px;background:white}label{font-size:14px;font-weight:bold}form{max-width:520px}
-table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.9);min-width:650px}th,td{text-align:left;padding:11px;border-bottom:1px solid #eee}th{background:#f7f4fb}
-.hidden{display:none}.muted{color:#777;font-size:13px}.danger{background:#c84b4b}.success{color:#16834a}.small-button{padding:7px 10px;font-size:13px}.top-actions{display:flex;gap:8px;align-items:center}.warning{border-inline-start:5px solid #d99424;background:#fff8e9}
-[dir="rtl"]{text-align:right}[dir="rtl"] th,[dir="rtl"] td{text-align:right}.row-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-@media(max-width:600px){main{padding:12px}header{padding:12px}nav{gap:5px}nav button{padding:9px;font-size:12px}.card{padding:14px}.brand img{width:45px;height:45px}}
+button{border:0;border-radius:8px;padding:11px 15px;background:#7254a5;color:white;cursor:pointer}
+nav button{background:#eee;color:#333}
+nav button.active{background:#7254a5;color:white}
+main{padding:22px;max-width:1150px;margin:auto}
+.card{background:rgba(255,255,255,.94);backdrop-filter:blur(8px);padding:20px;border-radius:12px;margin-bottom:16px;box-shadow:0 2px 8px #0001}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px}
+.number{font-size:28px;font-weight:bold;color:#7254a5;margin-top:10px}
+input,select,textarea{padding:11px;border:1px solid #ddd;border-radius:7px;width:100%;margin:6px 0 14px;background:white}
+label{font-size:14px;font-weight:bold}
+form{max-width:520px}
+table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.9);min-width:650px}
+th,td{text-align:left;padding:11px;border-bottom:1px solid #eee}
+th{background:#f7f4fb}
+.hidden{display:none}
+.muted{color:#777;font-size:13px}
+.danger{background:#c84b4b}
+.success{color:#16834a}
+.small-button{padding:7px 10px;font-size:13px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.warning{border-inline-start:5px solid #d99424;background:#fff8e9}
+[dir="rtl"]{text-align:right}
+[dir="rtl"] th,[dir="rtl"] td{text-align:right}
+.row-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+#editStudentModal{border:2px solid #7254a5}
+@media(max-width:600px){
+ main{padding:12px}
+ header{padding:12px}
+ nav{gap:5px}
+ nav button{padding:9px;font-size:12px}
+ .card{padding:14px}
+ .brand img{width:45px;height:45px}
+}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="brand"><img src="https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg" alt="Manar"><h1>Manar El Araby</h1></div>
-  <div class="top-actions"><button id="languageButton" onclick="toggleLanguage()">العربية</button><button id="logout" class="hidden" onclick="logout()">Log out</button></div>
+  <div class="brand">
+    <img src="https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg" alt="Manar">
+    <h1>Manar El Araby</h1>
+  </div>
+  <div class="top-actions">
+    <button id="languageButton" onclick="toggleLanguage()">العربية</button>
+    <button id="logout" class="hidden" onclick="logout()">Log out</button>
+  </div>
 </header>
+
 <section id="login" class="card" style="max-width:400px;margin:55px auto">
-  <div style="text-align:center"><img src="https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg" alt="Manar" style="width:100px;height:100px;object-fit:cover;border-radius:50%"></div>
-  <h2 data-en="Welcome, Manar!" data-ar="أهلاً يا منار!">Welcome, Manar!</h2><p class="muted" data-en="Sign in to manage your students and lessons." data-ar="سجلي الدخول لإدارة الطلاب والحصص.">Sign in to manage your students and lessons.</p>
-  <form onsubmit="login(event)"><label data-en="Email" data-ar="البريد الإلكتروني">Email</label><input id="email" type="email" required><label data-en="Password" data-ar="كلمة المرور">Password</label><input id="password" type="password" required><button type="submit" data-en="Sign in" data-ar="تسجيل الدخول">Sign in</button></form><p id="loginMessage" class="muted"></p>
+  <div style="text-align:center">
+    <img src="https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg" alt="Manar" style="width:100px;height:100px;object-fit:cover;border-radius:50%">
+  </div>
+  <h2 data-en="Welcome, Manar!" data-ar="أهلاً يا منار!">Welcome, Manar!</h2>
+  <p class="muted" data-en="Sign in to manage your students and lessons." data-ar="سجلي الدخول لإدارة الطلاب والحصص.">Sign in to manage your students and lessons.</p>
+  <form onsubmit="login(event)">
+    <label data-en="Email" data-ar="البريد الإلكتروني">Email</label>
+    <input id="email" type="email" required>
+    <label data-en="Password" data-ar="كلمة المرور">Password</label>
+    <input id="password" type="password" required>
+    <button type="submit" data-en="Sign in" data-ar="تسجيل الدخول">Sign in</button>
+  </form>
+  <p id="loginMessage" class="muted"></p>
 </section>
+
 <div id="app" class="hidden">
 <nav>
 <button class="active" onclick="showPage('dashboard',this)" data-en="Dashboard" data-ar="الرئيسية">Dashboard</button>
@@ -41,7 +88,9 @@ table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.9);min-wi
 <button onclick="showPage('attendance',this)" data-en="Attendance" data-ar="الحضور">Attendance</button>
 <button onclick="showPage('payments',this)" data-en="Payments" data-ar="المدفوعات">Payments</button>
 </nav>
+
 <main>
+
 <section id="dashboard">
 <h2 data-en="Dashboard" data-ar="الرئيسية">Dashboard</h2>
 <div class="cards">
@@ -52,115 +101,763 @@ table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.9);min-wi
 <div class="card"><h3 data-en="Package Renewal Alerts" data-ar="تنبيهات تجديد الباقة">Package Renewal Alerts</h3><div id="renewalAlerts"></div></div>
 <div class="card"><h3 data-en="Students per Group" data-ar="عدد الطلاب في كل مجموعة">Students per Group</h3><div id="groupSummary">No groups yet.</div></div>
 </section>
+
 <section id="students" class="hidden">
 <h2 data-en="Students" data-ar="الطلاب">Students</h2>
-<div class="card"><h3 data-en="Add Student" data-ar="إضافة طالب">Add Student</h3>
+
+<div class="card">
+<h3 data-en="Add Student" data-ar="إضافة طالب">Add Student</h3>
 <form onsubmit="addStudent(event)">
-<label data-en="Student Name" data-ar="اسم الطالب">Student Name</label><input id="studentName" required>
-<label data-en="Group" data-ar="المجموعة">Group</label><select id="studentGroup"><option value="">No group</option></select>
-<label data-en="Package Price" data-ar="سعر الباقة">Package Price</label><input id="studentPrice" type="number" min="0" value="0" required>
-<label data-en="Initial Amount Paid" data-ar="المبلغ المدفوع عند التسجيل">Initial Amount Paid</label><input id="studentPaid" type="number" min="0" value="0" required>
-<label data-en="Total Lessons" data-ar="إجمالي الحصص">Total Lessons</label><input id="studentTotal" type="number" min="1" value="8" required>
-<button type="submit" data-en="Add Student" data-ar="إضافة الطالب">Add Student</button></form></div>
-<div class="card"><h3 data-en="Students List" data-ar="قائمة الطلاب">Students List</h3><div style="overflow-x:auto"><table><thead><tr>
-<th data-en="Name" data-ar="الاسم">Name</th><th data-en="Group" data-ar="المجموعة">Group</th><th data-en="Price" data-ar="السعر">Price</th><th data-en="Paid" data-ar="المدفوع">Paid</th><th data-en="Remaining" data-ar="المتبقي">Remaining</th><th data-en="Lessons Left" data-ar="الحصص المتبقية">Lessons Left</th>
-</tr></thead><tbody id="studentsList"></tbody></table></div></div>
+<label data-en="Student Name" data-ar="اسم الطالب">Student Name</label>
+<input id="studentName" required>
+<label data-en="Group" data-ar="المجموعة">Group</label>
+<select id="studentGroup"><option value="">No group</option></select>
+<label data-en="Package Price" data-ar="سعر الباقة">Package Price</label>
+<input id="studentPrice" type="number" min="0" value="0" required>
+<label data-en="Initial Amount Paid" data-ar="المبلغ المدفوع عند التسجيل">Initial Amount Paid</label>
+<input id="studentPaid" type="number" min="0" value="0" required>
+<label data-en="Total Lessons" data-ar="إجمالي الحصص">Total Lessons</label>
+<input id="studentTotal" type="number" min="1" value="8" required>
+<button type="submit" data-en="Add Student" data-ar="إضافة الطالب">Add Student</button>
+</form>
+</div>
+
+<div class="card">
+<h3 data-en="Students List" data-ar="قائمة الطلاب">Students List</h3>
+<div style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+<th data-en="Name" data-ar="الاسم">Name</th>
+<th data-en="Group" data-ar="المجموعة">Group</th>
+<th data-en="Price" data-ar="السعر">Price</th>
+<th data-en="Paid" data-ar="المدفوع">Paid</th>
+<th data-en="Remaining" data-ar="المتبقي">Remaining</th>
+<th data-en="Lessons Left" data-ar="الحصص المتبقية">Lessons Left</th>
+<th data-en="Actions" data-ar="الإجراءات">Actions</th>
+</tr>
+</thead>
+<tbody id="studentsList"></tbody>
+</table>
+</div>
+</div>
+
+<!-- Edit Student Window -->
+<div id="editStudentModal" class="card hidden" style="max-width:520px;margin:20px auto">
+<h3 data-en="Edit Student" data-ar="تعديل بيانات الطالب">Edit Student</h3>
+<form onsubmit="saveStudentEdit(event)">
+<input type="hidden" id="editStudentId">
+
+<label data-en="Student Name" data-ar="اسم الطالب">Student Name</label>
+<input id="editStudentName" required>
+
+<label data-en="Group" data-ar="المجموعة">Group</label>
+<select id="editStudentGroup"></select>
+
+<label data-en="Package Price" data-ar="سعر الباقة">Package Price</label>
+<input id="editStudentPrice" type="number" min="0" required>
+
+<label data-en="Total Lessons" data-ar="إجمالي الحصص">Total Lessons</label>
+<input id="editStudentTotal" type="number" min="1" step="1" required>
+
+<button type="submit" data-en="Save Changes" data-ar="حفظ التعديلات">Save Changes</button>
+<button type="button" class="danger" onclick="closeEditStudent()" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+</form>
+<p id="editStudentMessage" class="muted"></p>
+</div>
+
 </section>
-<section id="groups" class="hidden"><h2 data-en="Groups" data-ar="المجموعات">Groups</h2>
-<div class="card"><h3 data-en="Add Group" data-ar="إضافة مجموعة">Add Group</h3><form onsubmit="addGroup(event)">
-<label data-en="Group Name" data-ar="اسم المجموعة">Group Name</label><input id="groupName" required>
-<label data-en="Schedule" data-ar="المواعيد">Schedule</label><input id="groupSchedule" placeholder="Sunday & Tuesday - 5:00 PM">
-<label data-en="Monthly Price" data-ar="السعر الشهري">Monthly Price</label><input id="groupPrice" type="number" min="0" value="0">
-<label data-en="Maximum Students" data-ar="الحد الأقصى للطلاب">Maximum Students</label><input id="groupMax" type="number" min="1" value="10">
-<button type="submit" data-en="Add Group" data-ar="إضافة المجموعة">Add Group</button></form></div>
-<div class="card"><h3 data-en="Groups List" data-ar="قائمة المجموعات">Groups List</h3><div id="groupsList"></div></div></section>
-<section id="lessons" class="hidden"><h2 data-en="Schedule" data-ar="الجدول">Schedule</h2>
-<div class="card"><h3 data-en="Add Lesson" data-ar="إضافة حصة">Add Lesson</h3><form onsubmit="addLesson(event)">
-<label data-en="Lesson Title" data-ar="اسم الحصة">Lesson Title</label><input id="lessonTitle" required>
-<label data-en="Group" data-ar="المجموعة">Group</label><select id="lessonGroup" required></select>
-<label data-en="Lesson Date" data-ar="تاريخ الحصة">Lesson Date</label><input id="lessonDate" type="date" required>
-<label data-en="Day" data-ar="اليوم">Day</label><select id="lessonDay"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select>
-<label data-en="Start Time" data-ar="وقت البداية">Start Time</label><input id="startTime" type="time" required>
-<label data-en="End Time" data-ar="وقت النهاية">End Time</label><input id="endTime" type="time" required>
-<button type="submit" data-en="Add Lesson" data-ar="إضافة الحصة">Add Lesson</button></form></div>
-<div class="card"><h3 data-en="Lessons List" data-ar="قائمة الحصص">Lessons List</h3><div id="lessonsList"></div></div></section>
-<section id="attendance" class="hidden"><h2 data-en="Attendance" data-ar="الحضور والغياب">Attendance</h2>
-<div class="card"><h3 data-en="Select Lesson" data-ar="اختيار الحصة">Select Lesson</h3><label data-en="Lesson" data-ar="الحصة">Lesson</label><select id="attendanceLesson" onchange="loadAttendance()"><option value="">Select a lesson</option></select><p class="muted" data-en="Choose a lesson to display its students." data-ar="اختاري الحصة لعرض أسماء الطلاب.">Choose a lesson to display its students.</p></div>
-<div class="card hidden" id="attendanceCard"><h3 data-en="Students Attendance" data-ar="تسجيل حضور الطلاب">Students Attendance</h3><div style="overflow-x:auto"><table><thead><tr><th data-en="Student" data-ar="الطالب">Student</th><th data-en="Attendance Status" data-ar="حالة الحضور">Attendance Status</th></tr></thead><tbody id="attendanceList"></tbody></table></div>
-<p class="muted" data-en="Present and Absent count as a lesson. Excused does not count." data-ar="الحاضر والغائب بدون إذن تُحسب لهما حصة. الغياب بإذن لا يُحسب.">Present and Absent count as a lesson. Excused does not count.</p><button onclick="saveAttendance()" data-en="Save Attendance" data-ar="حفظ الحضور">Save Attendance</button><p id="attendanceMessage" class="muted"></p></div></section>
-<section id="payments" class="hidden"><h2 data-en="Payments" data-ar="المدفوعات">Payments</h2>
-<div class="card"><h3 data-en="Record a Payment" data-ar="تسجيل دفعة">Record a Payment</h3><form onsubmit="addPayment(event)">
-<label data-en="Student" data-ar="الطالب">Student</label><select id="paymentStudent" required></select>
-<label data-en="Amount" data-ar="المبلغ">Amount</label><input id="paymentAmount" type="number" min="0.01" step="0.01" required>
-<label data-en="Payment Date" data-ar="تاريخ الدفع">Payment Date</label><input id="paymentDate" type="date" required>
-<label data-en="Payment Method" data-ar="طريقة الدفع">Payment Method</label><select id="paymentMethod"><option value="Cash">Cash</option><option value="InstaPay">InstaPay</option><option value="Bank Transfer">Bank Transfer</option><option value="Vodafone Cash">Vodafone Cash</option><option value="Wallet">Wallet</option><option value="Other">Other</option></select>
-<label><input id="renewPackage" type="checkbox" style="width:auto;margin-inline-end:6px"><span data-en="This payment starts a new package" data-ar="هذه الدفعة لتجديد باقة جديدة">This payment starts a new package</span></label>
-<label data-en="Notes (optional)" data-ar="ملاحظات (اختياري)">Notes (optional)</label><textarea id="paymentNotes" rows="2"></textarea>
-<button type="submit" data-en="Save Payment" data-ar="حفظ الدفعة">Save Payment</button></form><p id="paymentMessage" class="muted"></p></div>
-<div class="card"><h3 data-en="Payment Overview" data-ar="ملخص المدفوعات">Payment Overview</h3><div style="overflow-x:auto"><table><thead><tr><th data-en="Student" data-ar="الطالب">Student</th><th data-en="Package Price" data-ar="سعر الباقة">Package Price</th><th data-en="Paid This Package" data-ar="المدفوع في الباقة الحالية">Paid This Package</th><th data-en="Remaining" data-ar="المتبقي">Remaining</th></tr></thead><tbody id="paymentsList"></tbody></table></div></div>
-<div class="card"><h3 data-en="Payment History" data-ar="سجل الدفعات">Payment History</h3><label data-en="Filter by student" data-ar="تصفية حسب الطالب">Filter by student</label><select id="paymentFilter" onchange="renderPaymentHistory()"><option value="">All students</option></select><div style="overflow-x:auto"><table><thead><tr><th data-en="Date" data-ar="التاريخ">Date</th><th data-en="Student" data-ar="الطالب">Student</th><th data-en="Amount" data-ar="المبلغ">Amount</th><th data-en="Method" data-ar="الطريقة">Method</th><th data-en="Notes" data-ar="ملاحظات">Notes</th></tr></thead><tbody id="paymentHistory"></tbody></table></div></div>
+
+<section id="groups" class="hidden">
+<h2 data-en="Groups" data-ar="المجموعات">Groups</h2>
+<div class="card">
+<h3 data-en="Add Group" data-ar="إضافة مجموعة">Add Group</h3>
+<form onsubmit="addGroup(event)">
+<label data-en="Group Name" data-ar="اسم المجموعة">Group Name</label>
+<input id="groupName" required>
+<label data-en="Schedule" data-ar="المواعيد">Schedule</label>
+<input id="groupSchedule" placeholder="Sunday & Tuesday - 5:00 PM">
+<label data-en="Monthly Price" data-ar="السعر الشهري">Monthly Price</label>
+<input id="groupPrice" type="number" min="0" value="0">
+<label data-en="Maximum Students" data-ar="الحد الأقصى للطلاب">Maximum Students</label>
+<input id="groupMax" type="number" min="1" value="10">
+<button type="submit" data-en="Add Group" data-ar="إضافة المجموعة">Add Group</button>
+</form>
+</div>
+<div class="card"><h3 data-en="Groups List" data-ar="قائمة المجموعات">Groups List</h3><div id="groupsList"></div></div>
 </section>
-</main></div>
+
+<section id="lessons" class="hidden">
+<h2 data-en="Schedule" data-ar="الجدول">Schedule</h2>
+<div class="card">
+<h3 data-en="Add Lesson" data-ar="إضافة حصة">Add Lesson</h3>
+<form onsubmit="addLesson(event)">
+<label data-en="Lesson Title" data-ar="اسم الحصة">Lesson Title</label>
+<input id="lessonTitle" required>
+<label data-en="Group" data-ar="المجموعة">Group</label>
+<select id="lessonGroup" required></select>
+<label data-en="Lesson Date" data-ar="تاريخ الحصة">Lesson Date</label>
+<input id="lessonDate" type="date" required>
+<label data-en="Day" data-ar="اليوم">Day</label>
+<select id="lessonDay">
+<option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option>
+</select>
+<label data-en="Start Time" data-ar="وقت البداية">Start Time</label>
+<input id="startTime" type="time" required>
+<label data-en="End Time" data-ar="وقت النهاية">End Time</label>
+<input id="endTime" type="time" required>
+<button type="submit" data-en="Add Lesson" data-ar="إضافة الحصة">Add Lesson</button>
+</form>
+</div>
+<div class="card"><h3 data-en="Lessons List" data-ar="قائمة الحصص">Lessons List</h3><div id="lessonsList"></div></div>
+</section>
+
+<section id="attendance" class="hidden">
+<h2 data-en="Attendance" data-ar="الحضور والغياب">Attendance</h2>
+<div class="card">
+<h3 data-en="Select Lesson" data-ar="اختيار الحصة">Select Lesson</h3>
+<label data-en="Lesson" data-ar="الحصة">Lesson</label>
+<select id="attendanceLesson" onchange="loadAttendance()"><option value="">Select a lesson</option></select>
+<p class="muted" data-en="Choose a lesson to display its students." data-ar="اختاري الحصة لعرض أسماء الطلاب.">Choose a lesson to display its students.</p>
+</div>
+<div class="card hidden" id="attendanceCard">
+<h3 data-en="Students Attendance" data-ar="تسجيل حضور الطلاب">Students Attendance</h3>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th data-en="Student" data-ar="الطالب">Student</th><th data-en="Attendance Status" data-ar="حالة الحضور">Attendance Status</th></tr></thead>
+<tbody id="attendanceList"></tbody>
+</table>
+</div>
+<p class="muted" data-en="Present and Absent count as a lesson. Excused does not count." data-ar="الحاضر والغائب بدون إذن تُحسب لهما حصة. الغياب بإذن لا يُحسب.">Present and Absent count as a lesson. Excused does not count.</p>
+<button onclick="saveAttendance()" data-en="Save Attendance" data-ar="حفظ الحضور">Save Attendance</button>
+<p id="attendanceMessage" class="muted"></p>
+</div>
+</section>
+
+<section id="payments" class="hidden">
+<h2 data-en="Payments" data-ar="المدفوعات">Payments</h2>
+<div class="card">
+<h3 data-en="Record a Payment" data-ar="تسجيل دفعة">Record a Payment</h3>
+<form onsubmit="addPayment(event)">
+<label data-en="Student" data-ar="الطالب">Student</label>
+<select id="paymentStudent" required></select>
+<label data-en="Amount" data-ar="المبلغ">Amount</label>
+<input id="paymentAmount" type="number" min="0.01" step="0.01" required>
+<label data-en="Payment Date" data-ar="تاريخ الدفع">Payment Date</label>
+<input id="paymentDate" type="date" required>
+<label data-en="Payment Method" data-ar="طريقة الدفع">Payment Method</label>
+<select id="paymentMethod">
+<option value="Cash">Cash</option>
+<option value="InstaPay">InstaPay</option>
+<option value="Bank Transfer">Bank Transfer</option>
+<option value="Vodafone Cash">Vodafone Cash</option>
+<option value="Wallet">Wallet</option>
+<option value="Other">Other</option>
+</select>
+<label>
+<input id="renewPackage" type="checkbox" style="width:auto;margin-inline-end:6px">
+<span data-en="This payment starts a new package" data-ar="هذه الدفعة لتجديد باقة جديدة">This payment starts a new package</span>
+</label>
+<label data-en="Notes (optional)" data-ar="ملاحظات (اختياري)">Notes (optional)</label>
+<textarea id="paymentNotes" rows="2"></textarea>
+<button type="submit" data-en="Save Payment" data-ar="حفظ الدفعة">Save Payment</button>
+</form>
+<p id="paymentMessage" class="muted"></p>
+</div>
+
+<div class="card">
+<h3 data-en="Payment Overview" data-ar="ملخص المدفوعات">Payment Overview</h3>
+<div style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+<th data-en="Student" data-ar="الطالب">Student</th>
+<th data-en="Package Price" data-ar="سعر الباقة">Package Price</th>
+<th data-en="Paid This Package" data-ar="المدفوع في الباقة الحالية">Paid This Package</th>
+<th data-en="Remaining" data-ar="المتبقي">Remaining</th>
+</tr>
+</thead>
+<tbody id="paymentsList"></tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h3 data-en="Payment History" data-ar="سجل الدفعات">Payment History</h3>
+<label data-en="Filter by student" data-ar="تصفية حسب الطالب">Filter by student</label>
+<select id="paymentFilter" onchange="renderPaymentHistory()"><option value="">All students</option></select>
+<div style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+<th data-en="Date" data-ar="التاريخ">Date</th>
+<th data-en="Student" data-ar="الطالب">Student</th>
+<th data-en="Amount" data-ar="المبلغ">Amount</th>
+<th data-en="Method" data-ar="الطريقة">Method</th>
+<th data-en="Notes" data-ar="ملاحظات">Notes</th>
+</tr>
+</thead>
+<tbody id="paymentHistory"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+</main>
+</div>
+
 <script>
 const SUPABASE_URL="https://kdggtwdiyrbfdwrsfxrb.supabase.co";
 const SUPABASE_KEY="sb_publishable_LjlqunyD6_OdIizWQ4PDGQ_cssL4Lsy";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
 let currentUser=null,students=[],groups=[],lessons=[],payments=[],currentLang="en";
+
 function tr(en,ar){return currentLang==="ar"?ar:en}
-function toggleLanguage(){currentLang=currentLang==="en"?"ar":"en";document.documentElement.lang=currentLang;document.documentElement.dir=currentLang==="ar"?"rtl":"ltr";document.getElementById("languageButton").textContent=currentLang==="en"?"العربية":"English";document.querySelectorAll("[data-en][data-ar]").forEach(el=>el.textContent=el.dataset[currentLang]);render()}
-function showPage(id,button){document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));button.classList.add("active");if(id==="attendance")loadAttendanceOptions();if(id==="payments")renderPaymentHistory()}
-async function login(e){e.preventDefault();const msg=document.getElementById("loginMessage");msg.textContent=tr("Signing in...","جاري تسجيل الدخول...");const {data,error}=await db.auth.signInWithPassword({email:document.getElementById("email").value,password:document.getElementById("password").value});if(error){msg.textContent=error.message;return}currentUser=data.user;await openApp()}
-async function logout(){await db.auth.signOut();currentUser=null;document.getElementById("app").classList.add("hidden");document.getElementById("login").classList.remove("hidden");document.getElementById("logout").classList.add("hidden")}
-async function openApp(){document.getElementById("login").classList.add("hidden");document.getElementById("app").classList.remove("hidden");document.getElementById("logout").classList.remove("hidden");await loadData()}
-function cyclePaid(student){const cycle=student.package_start_date;const rows=payments.filter(p=>p.student_id===student.id&&(!cycle||!p.package_start_date||p.package_start_date===cycle));if(rows.length)return rows.reduce((a,p)=>a+Number(p.amount||0),0);return Number(student.paid||0)}
+
+function toggleLanguage(){
+ currentLang=currentLang==="en"?"ar":"en";
+ document.documentElement.lang=currentLang;
+ document.documentElement.dir=currentLang==="ar"?"rtl":"ltr";
+ document.getElementById("languageButton").textContent=currentLang==="en"?"العربية":"English";
+ document.querySelectorAll("[data-en][data-ar]").forEach(el=>el.textContent=el.dataset[currentLang]);
+ render();
+}
+
+function showPage(id,button){
+ document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ if(id==="attendance")loadAttendanceOptions();
+ if(id==="payments")renderPaymentHistory();
+}
+
+async function login(e){
+ e.preventDefault();
+ const msg=document.getElementById("loginMessage");
+ msg.textContent=tr("Signing in...","جاري تسجيل الدخول...");
+ const {data,error}=await db.auth.signInWithPassword({
+  email:document.getElementById("email").value,
+  password:document.getElementById("password").value
+ });
+ if(error){msg.textContent=error.message;return}
+ currentUser=data.user;
+ await openApp();
+}
+
+async function logout(){
+ await db.auth.signOut();
+ currentUser=null;
+ document.getElementById("app").classList.add("hidden");
+ document.getElementById("login").classList.remove("hidden");
+ document.getElementById("logout").classList.add("hidden");
+}
+
+async function openApp(){
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("app").classList.remove("hidden");
+ document.getElementById("logout").classList.remove("hidden");
+ await loadData();
+}
+
+function cyclePaid(student){
+ const cycle=student.package_start_date;
+ const rows=payments.filter(p=>p.student_id===student.id&&(!cycle||!p.package_start_date||p.package_start_date===cycle));
+ if(rows.length)return rows.reduce((a,p)=>a+Number(p.amount||0),0);
+ return Number(student.paid||0);
+}
+
 async function loadData(){
- const [s,g,l,p]=await Promise.all([db.from("students").select("*").order("created_at",{ascending:false}),db.from("groups").select("*").order("created_at",{ascending:false}),db.from("lessons").select("*").order("lesson_date",{ascending:true}),db.from("payments").select("*").order("payment_date",{ascending:false})]);
- if(s.error||g.error||l.error||p.error){console.error(s.error,g.error,l.error,p.error);alert(tr("Could not load data. Check database settings and policies.","تعذر تحميل البيانات. راجعي إعدادات قاعدة البيانات والصلاحيات."));return}
- students=s.data||[];groups=g.data||[];lessons=l.data||[];payments=p.data||[];render()
+ const [s,g,l,p]=await Promise.all([
+  db.from("students").select("*").order("created_at",{ascending:false}),
+  db.from("groups").select("*").order("created_at",{ascending:false}),
+  db.from("lessons").select("*").order("lesson_date",{ascending:true}),
+  db.from("payments").select("*").order("payment_date",{ascending:false})
+ ]);
+
+ if(s.error||g.error||l.error||p.error){
+  console.error(s.error,g.error,l.error,p.error);
+  alert(tr("Could not load data. Check database settings and policies.","تعذر تحميل البيانات. راجعي إعدادات قاعدة البيانات والصلاحيات."));
+  return;
+ }
+
+ students=s.data||[];
+ groups=g.data||[];
+ lessons=l.data||[];
+ payments=p.data||[];
+ render();
 }
+
 function render(){
- document.getElementById("totalStudents").textContent=students.length;document.getElementById("totalGroups").textContent=groups.length;
- document.getElementById("outstanding").textContent=students.reduce((sum,s)=>sum+Math.max(0,Number(s.package_price||0)-cyclePaid(s)),0).toLocaleString();
- document.getElementById("studentGroup").innerHTML=`<option value="">${tr("No group","بدون مجموعة")}</option>`+groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
- document.getElementById("lessonGroup").innerHTML=groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
- document.getElementById("paymentStudent").innerHTML=students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
- const filter=document.getElementById("paymentFilter"),old=filter.value;filter.innerHTML=`<option value="">${tr("All students","كل الطلاب")}</option>`+students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");filter.value=old;
- document.getElementById("studentsList").innerHTML=students.map(s=>{const g=groups.find(x=>x.id===s.group_id),paid=cyclePaid(s);return `<tr><td>${esc(s.name)}</td><td>${g?esc(g.name):"-"}</td><td>${money(s.package_price)}</td><td>${money(paid)}</td><td>${money(Math.max(0,Number(s.package_price||0)-paid))}</td><td>${Math.max(0,Number(s.total_lessons||0)-Number(s.completed_lessons||0))}</td></tr>`}).join("");
- document.getElementById("groupsList").innerHTML=groups.map(g=>{const n=students.filter(s=>s.group_id===g.id).length;return `<p><b>${esc(g.name)}</b> — ${n} ${tr("students","طلاب")} / ${g.max_students||"-"} ${tr("max","حد أقصى")}<br><span class="muted">${esc(g.schedule||tr("No schedule set","لا يوجد موعد محدد"))}</span></p>`}).join("")||tr("No groups yet.","لا توجد مجموعات حتى الآن.");
- document.getElementById("groupSummary").innerHTML=groups.map(g=>`<p>${esc(g.name)}: ${students.filter(s=>s.group_id===g.id).length} ${tr("students","طلاب")}</p>`).join("")||tr("No groups yet.","لا توجد مجموعات حتى الآن.");
- document.getElementById("lessonsList").innerHTML=lessons.map(l=>{const g=groups.find(x=>x.id===l.group_id);return `<p><b>${esc(l.title)}</b> — ${g?esc(g.name):"-"}<br>${esc(l.lesson_date||"")} | ${esc(l.day||"")} | ${esc(l.start_time||"")} - ${esc(l.end_time||"")}</p>`}).join("")||tr("No lessons yet.","لا توجد حصص حتى الآن.");
- document.getElementById("paymentsList").innerHTML=students.map(s=>{const paid=cyclePaid(s);return `<tr><td>${esc(s.name)}</td><td>${money(s.package_price)}</td><td>${money(paid)}</td><td>${money(Math.max(0,Number(s.package_price||0)-paid))}</td></tr>`}).join("");
- renderRenewalAlerts();renderPaymentHistory();loadAttendanceOptions()
+ document.getElementById("totalStudents").textContent=students.length;
+ document.getElementById("totalGroups").textContent=groups.length;
+
+ document.getElementById("outstanding").textContent=students.reduce(
+  (sum,s)=>sum+Math.max(0,Number(s.package_price||0)-cyclePaid(s)),0
+ ).toLocaleString();
+
+ document.getElementById("studentGroup").innerHTML=
+  `<option value="">${tr("No group","بدون مجموعة")}</option>`+
+  groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
+
+ document.getElementById("lessonGroup").innerHTML=
+  groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
+
+ document.getElementById("paymentStudent").innerHTML=
+  students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
+
+ const filter=document.getElementById("paymentFilter");
+ const old=filter.value;
+ filter.innerHTML=`<option value="">${tr("All students","كل الطلاب")}</option>`+
+  students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
+ filter.value=old;
+
+ document.getElementById("studentsList").innerHTML=students.map(s=>{
+  const g=groups.find(x=>x.id===s.group_id);
+  const paid=cyclePaid(s);
+  return `<tr>
+   <td>${esc(s.name)}</td>
+   <td>${g?esc(g.name):"-"}</td>
+   <td>${money(s.package_price)}</td>
+   <td>${money(paid)}</td>
+   <td>${money(Math.max(0,Number(s.package_price||0)-paid))}</td>
+   <td>${Math.max(0,Number(s.total_lessons||0)-Number(s.completed_lessons||0))}</td>
+   <td><button class="small-button" onclick="openEditStudent('${s.id}')">${tr("Edit","تعديل")}</button></td>
+  </tr>`;
+ }).join("");
+
+ document.getElementById("groupsList").innerHTML=
+  groups.map(g=>{
+   const n=students.filter(s=>s.group_id===g.id).length;
+   return `<p><b>${esc(g.name)}</b> — ${n} ${tr("students","طلاب")} / ${g.max_students||"-"} ${tr("max","حد أقصى")}<br><span class="muted">${esc(g.schedule||tr("No schedule set","لا يوجد موعد محدد"))}</span></p>`;
+  }).join("")||tr("No groups yet.","لا توجد مجموعات حتى الآن.");
+
+ document.getElementById("groupSummary").innerHTML=
+  groups.map(g=>`<p>${esc(g.name)}: ${students.filter(s=>s.group_id===g.id).length} ${tr("students","طلاب")}</p>`).join("")||tr("No groups yet.","لا توجد مجموعات حتى الآن.");
+
+ document.getElementById("lessonsList").innerHTML=
+  lessons.map(l=>{
+   const g=groups.find(x=>x.id===l.group_id);
+   return `<p><b>${esc(l.title)}</b> — ${g?esc(g.name):"-"}<br>${esc(l.lesson_date||"")} | ${esc(l.day||"")} | ${esc(l.start_time||"")} - ${esc(l.end_time||"")}</p>`;
+  }).join("")||tr("No lessons yet.","لا توجد حصص حتى الآن.");
+
+ document.getElementById("paymentsList").innerHTML=
+  students.map(s=>{
+   const paid=cyclePaid(s);
+   return `<tr><td>${esc(s.name)}</td><td>${money(s.package_price)}</td><td>${money(paid)}</td><td>${money(Math.max(0,Number(s.package_price||0)-paid))}</td></tr>`;
+  }).join("");
+
+ renderRenewalAlerts();
+ renderPaymentHistory();
+ loadAttendanceOptions();
 }
-function renderRenewalAlerts(){const box=document.getElementById("renewalAlerts");const due=students.filter(s=>Number(s.total_lessons||0)>0&&Number(s.completed_lessons||0)>=Number(s.total_lessons||0)-1);box.innerHTML=due.map(s=>`<div class="card warning"><b>${esc(s.name)}</b> — ${tr("Package nearly finished: ","الباقة قاربت على الانتهاء: ")}${Number(s.completed_lessons||0)} / ${Number(s.total_lessons||0)} ${tr("lessons completed","حصة منفذة")}</div>`).join("")||`<p class="muted">${tr("No students need renewal now.","لا يوجد طلاب يحتاجون تجديد الباقة حاليًا.")}</p>`}
+
+/* Student editing functions */
+
+function openEditStudent(id){
+ const s=students.find(x=>x.id===id);
+ if(!s)return;
+
+ document.getElementById("editStudentId").value=s.id;
+ document.getElementById("editStudentName").value=s.name||"";
+ document.getElementById("editStudentPrice").value=Number(s.package_price||0);
+ document.getElementById("editStudentTotal").value=Number(s.total_lessons||8);
+
+ document.getElementById("editStudentGroup").innerHTML=
+  `<option value="">${tr("No group","بدون مجموعة")}</option>`+
+  groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
+
+ document.getElementById("editStudentGroup").value=s.group_id||"";
+ document.getElementById("editStudentMessage").textContent="";
+ document.getElementById("editStudentMessage").classList.remove("success");
+
+ document.getElementById("editStudentModal").classList.remove("hidden");
+ document.getElementById("editStudentModal").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function closeEditStudent(){
+ document.getElementById("editStudentModal").classList.add("hidden");
+}
+
+async function saveStudentEdit(e){
+ e.preventDefault();
+
+ const id=document.getElementById("editStudentId").value;
+ const msg=document.getElementById("editStudentMessage");
+ const name=document.getElementById("editStudentName").value.trim();
+ const price=Number(document.getElementById("editStudentPrice").value);
+ const total=Number(document.getElementById("editStudentTotal").value);
+ const groupId=document.getElementById("editStudentGroup").value||null;
+
+ if(!name||!Number.isFinite(price)||price<0||!Number.isInteger(total)||total<1){
+  msg.textContent=tr("Enter valid student details.","من فضلك أدخلي بيانات صحيحة.");
+  return;
+ }
+
+ if(!currentUser){
+  msg.textContent=tr("Please sign in again.","من فضلك سجلي الدخول مرة أخرى.");
+  return;
+ }
+
+ msg.textContent=tr("Saving...","جاري الحفظ...");
+
+ const {error}=await db.from("students").update({
+  name:name,
+  group_id:groupId,
+  package_price:price,
+  total_lessons:total
+ }).eq("id",id).eq("user_id",currentUser.id);
+
+ if(error){
+  msg.textContent=tr("Could not save changes: ","تعذر حفظ التعديلات: ")+error.message;
+  return;
+ }
+
+ msg.textContent=tr("Changes saved successfully.","تم حفظ التعديلات بنجاح.");
+ msg.classList.add("success");
+
+ await loadData();
+ closeEditStudent();
+}
+
+function renderRenewalAlerts(){
+ const box=document.getElementById("renewalAlerts");
+ const due=students.filter(s=>Number(s.total_lessons||0)>0&&Number(s.completed_lessons||0)>=Number(s.total_lessons||0)-1);
+
+ box.innerHTML=due.map(s=>`
+  <div class="card warning">
+   <b>${esc(s.name)}</b> — ${tr("Package nearly finished: ","الباقة قاربت على الانتهاء: ")}
+   ${Number(s.completed_lessons||0)} / ${Number(s.total_lessons||0)}
+   ${tr("lessons completed","حصة منفذة")}
+  </div>
+ `).join("")||`<p class="muted">${tr("No students need renewal now.","لا يوجد طلاب يحتاجون تجديد الباقة حاليًا.")}</p>`;
+}
+
 async function addStudent(e){
- e.preventDefault();const name=document.getElementById("studentName").value.trim(),paid=Number(document.getElementById("studentPaid").value||0),today=new Date().toLocaleDateString("en-CA");
- const {data,error}=await db.from("students").insert({user_id:currentUser.id,name,group_id:document.getElementById("studentGroup").value||null,package_price:Number(document.getElementById("studentPrice").value||0),paid,total_lessons:Number(document.getElementById("studentTotal").value),completed_lessons:0,package_start_date:today}).select().single();
+ e.preventDefault();
+
+ const name=document.getElementById("studentName").value.trim();
+ const paid=Number(document.getElementById("studentPaid").value||0);
+ const today=new Date().toLocaleDateString("en-CA");
+
+ const {data,error}=await db.from("students").insert({
+  user_id:currentUser.id,
+  name,
+  group_id:document.getElementById("studentGroup").value||null,
+  package_price:Number(document.getElementById("studentPrice").value||0),
+  paid,
+  total_lessons:Number(document.getElementById("studentTotal").value),
+  completed_lessons:0,
+  package_start_date:today
+ }).select().single();
+
  if(error){alert(error.message);return}
- if(paid>0){const {error:payError}=await db.from("payments").insert({student_id:data.id,amount:paid,payment_date:today,payment_method:"Cash",notes:"Initial payment",package_start_date:today});if(payError){alert(tr("Student was added, but the initial payment was NOT recorded. Do not add the student again. Payment error: ","تمت إضافة الطالب لكن الدفعة الأولى لم تُسجل. لا تضيفي الطالب مرة أخرى. خطأ الدفع: ")+payError.message);await loadData();return}}
- e.target.reset();await loadData()
+
+ if(paid>0){
+  const {error:payError}=await db.from("payments").insert({
+   student_id:data.id,
+   amount:paid,
+   payment_date:today,
+   payment_method:"Cash",
+   notes:"Initial payment",
+   package_start_date:today
+  });
+
+  if(payError){
+   alert(tr("Student was added, but the initial payment was NOT recorded. Do not add the student again. Payment error: ","تمت إضافة الطالب لكن الدفعة الأولى لم تُسجل. لا تضيفي الطالب مرة أخرى. خطأ الدفع: ")+payError.message);
+   await loadData();
+   return;
+  }
+ }
+
+ e.target.reset();
+ await loadData();
 }
-async function addGroup(e){e.preventDefault();const {error}=await db.from("groups").insert({user_id:currentUser.id,name:document.getElementById("groupName").value,schedule:document.getElementById("groupSchedule").value,monthly_price:Number(document.getElementById("groupPrice").value),max_students:Number(document.getElementById("groupMax").value)});if(error){alert(error.message);return}e.target.reset();await loadData()}
-async function addLesson(e){e.preventDefault();const start=document.getElementById("startTime").value,end=document.getElementById("endTime").value;if(end<=start){alert(tr("End time must be after start time.","وقت النهاية لازم يكون بعد وقت البداية."));return}const {error}=await db.from("lessons").insert({user_id:currentUser.id,title:document.getElementById("lessonTitle").value,group_id:document.getElementById("lessonGroup").value,lesson_date:document.getElementById("lessonDate").value,day:document.getElementById("lessonDay").value,start_time:start,end_time:end});if(error){alert(error.message);return}e.target.reset();await loadData()}
-function loadAttendanceOptions(){const sel=document.getElementById("attendanceLesson");if(!sel)return;const prev=sel.value;sel.innerHTML=`<option value="">${tr("Select a lesson","اختاري الحصة")}</option>`+lessons.map(l=>{const g=groups.find(x=>x.id===l.group_id);return `<option value="${l.id}">${esc(l.title)} — ${esc(g?.name||"")} — ${esc(l.lesson_date||"")}</option>`}).join("");if(prev&&lessons.some(l=>l.id===prev))sel.value=prev}
-async function loadAttendance(){const id=document.getElementById("attendanceLesson").value,card=document.getElementById("attendanceCard"),list=document.getElementById("attendanceList");document.getElementById("attendanceMessage").textContent="";if(!id){card.classList.add("hidden");return}const lesson=lessons.find(l=>l.id===id);if(!lesson?.lesson_date){alert(tr("This lesson has no date.","الحصة دي مش مسجل لها تاريخ."));card.classList.add("hidden");return}const members=students.filter(s=>s.group_id===lesson.group_id);if(!members.length){list.innerHTML=`<tr><td colspan="2">${tr("No students in this group.","لا يوجد طلاب في المجموعة دي.")}</td></tr>`;card.classList.remove("hidden");return}const {data,error}=await db.from("lesson_attendance").select("student_id,status").eq("lesson_id",id).eq("attendance_date",lesson.lesson_date);if(error){alert(tr("Could not load attendance: ","تعذر تحميل الحضور: ")+error.message);return}const saved={};(data||[]).forEach(a=>saved[a.student_id]=a.status);list.innerHTML=members.map(s=>{const st=saved[s.id]||"Present";return `<tr><td>${esc(s.name)}</td><td><select class="status-select attendance-status" data-student-id="${s.id}"><option value="Present" ${st==="Present"?"selected":""}>${tr("Present - counts","حاضر - تُحسب حصة")}</option><option value="Absent" ${st==="Absent"?"selected":""}>${tr("Absent - counts","غائب بدون إذن - تُحسب حصة")}</option><option value="Excused" ${st==="Excused"?"selected":""}>${tr("Excused - does not count","غائب بإذن - لا تُحسب")}</option></select></td></tr>`}).join("");card.classList.remove("hidden")}
-async function saveAttendance(){const id=document.getElementById("attendanceLesson").value,lesson=lessons.find(l=>l.id===id);if(!lesson)return;const selects=[...document.querySelectorAll(".attendance-status")];if(!selects.length){alert(tr("There are no students to save.","لا يوجد طلاب لحفظ حضورهم."));return}const rows=selects.map(el=>({student_id:el.dataset.studentId,lesson_id:id,attendance_date:lesson.lesson_date,status:el.value}));const msg=document.getElementById("attendanceMessage");msg.textContent=tr("Saving...","جاري الحفظ...");const {error}=await db.from("lesson_attendance").upsert(rows,{onConflict:"student_id,lesson_id,attendance_date"});if(error){msg.textContent=tr("Save failed: ","فشل الحفظ: ")+error.message;return}
- for(const student of students.filter(s=>s.group_id===lesson.group_id)){let q=db.from("lesson_attendance").select("id",{count:"exact",head:true}).eq("student_id",student.id).in("status",["Present","Absent"]);if(student.package_start_date)q=q.gte("attendance_date",student.package_start_date);const {count,error:ce}=await q;if(ce){msg.textContent=tr("Attendance saved, but totals could not be updated: ","تم حفظ الحضور لكن تعذر تحديث عدد الحصص: ")+ce.message;return}const {error:ue}=await db.from("students").update({completed_lessons:count||0}).eq("id",student.id);if(ue){msg.textContent=tr("Attendance saved, but a student total could not be updated: ","تم حفظ الحضور لكن تعذر تحديث رصيد أحد الطلاب: ")+ue.message;return}}
- msg.textContent=tr("Attendance saved successfully.","تم حفظ الحضور بنجاح.");msg.classList.add("success");await loadData();await loadAttendance()}
+
+async function addGroup(e){
+ e.preventDefault();
+
+ const {error}=await db.from("groups").insert({
+  user_id:currentUser.id,
+  name:document.getElementById("groupName").value,
+  schedule:document.getElementById("groupSchedule").value,
+  monthly_price:Number(document.getElementById("groupPrice").value),
+  max_students:Number(document.getElementById("groupMax").value)
+ });
+
+ if(error){alert(error.message);return}
+ e.target.reset();
+ await loadData();
+}
+
+async function addLesson(e){
+ e.preventDefault();
+
+ const start=document.getElementById("startTime").value;
+ const end=document.getElementById("endTime").value;
+
+ if(end<=start){
+  alert(tr("End time must be after start time.","وقت النهاية لازم يكون بعد وقت البداية."));
+  return;
+ }
+
+ const {error}=await db.from("lessons").insert({
+  user_id:currentUser.id,
+  title:document.getElementById("lessonTitle").value,
+  group_id:document.getElementById("lessonGroup").value,
+  lesson_date:document.getElementById("lessonDate").value,
+  day:document.getElementById("lessonDay").value,
+  start_time:start,
+  end_time:end
+ });
+
+ if(error){alert(error.message);return}
+ e.target.reset();
+ await loadData();
+}
+
+function loadAttendanceOptions(){
+ const sel=document.getElementById("attendanceLesson");
+ if(!sel)return;
+
+ const prev=sel.value;
+ sel.innerHTML=`<option value="">${tr("Select a lesson","اختاري الحصة")}</option>`+
+ lessons.map(l=>{
+  const g=groups.find(x=>x.id===l.group_id);
+  return `<option value="${l.id}">${esc(l.title)} — ${esc(g?.name||"")} — ${esc(l.lesson_date||"")}</option>`;
+ }).join("");
+
+ if(prev&&lessons.some(l=>l.id===prev))sel.value=prev;
+}
+
+async function loadAttendance(){
+ const id=document.getElementById("attendanceLesson").value;
+ const card=document.getElementById("attendanceCard");
+ const list=document.getElementById("attendanceList");
+
+ document.getElementById("attendanceMessage").textContent="";
+
+ if(!id){card.classList.add("hidden");return}
+
+ const lesson=lessons.find(l=>l.id===id);
+
+ if(!lesson?.lesson_date){
+  alert(tr("This lesson has no date.","الحصة دي مش مسجل لها تاريخ."));
+  card.classList.add("hidden");
+  return;
+ }
+
+ const members=students.filter(s=>s.group_id===lesson.group_id);
+
+ if(!members.length){
+  list.innerHTML=`<tr><td colspan="2">${tr("No students in this group.","لا يوجد طلاب في المجموعة دي.")}</td></tr>`;
+  card.classList.remove("hidden");
+  return;
+ }
+
+ const {data,error}=await db.from("lesson_attendance")
+  .select("student_id,status")
+  .eq("lesson_id",id)
+  .eq("attendance_date",lesson.lesson_date);
+
+ if(error){
+  alert(tr("Could not load attendance: ","تعذر تحميل الحضور: ")+error.message);
+  return;
+ }
+
+ const saved={};
+ (data||[]).forEach(a=>saved[a.student_id]=a.status);
+
+ list.innerHTML=members.map(s=>{
+  const st=saved[s.id]||"Present";
+  return `<tr>
+   <td>${esc(s.name)}</td>
+   <td>
+    <select class="status-select attendance-status" data-student-id="${s.id}">
+     <option value="Present" ${st==="Present"?"selected":""}>${tr("Present - counts","حاضر - تُحسب حصة")}</option>
+     <option value="Absent" ${st==="Absent"?"selected":""}>${tr("Absent - counts","غائب بدون إذن - تُحسب حصة")}</option>
+     <option value="Excused" ${st==="Excused"?"selected":""}>${tr("Excused - does not count","غائب بإذن - لا تُحسب")}</option>
+    </select>
+   </td>
+  </tr>`;
+ }).join("");
+
+ card.classList.remove("hidden");
+}
+
+async function saveAttendance(){
+ const id=document.getElementById("attendanceLesson").value;
+ const lesson=lessons.find(l=>l.id===id);
+ if(!lesson)return;
+
+ const selects=[...document.querySelectorAll(".attendance-status")];
+
+ if(!selects.length){
+  alert(tr("There are no students to save.","لا يوجد طلاب لحفظ حضورهم."));
+  return;
+ }
+
+ const rows=selects.map(el=>({
+  student_id:el.dataset.studentId,
+  lesson_id:id,
+  attendance_date:lesson.lesson_date,
+  status:el.value
+ }));
+
+ const msg=document.getElementById("attendanceMessage");
+ msg.textContent=tr("Saving...","جاري الحفظ...");
+
+ const {error}=await db.from("lesson_attendance").upsert(rows,{
+  onConflict:"student_id,lesson_id,attendance_date"
+ });
+
+ if(error){
+  msg.textContent=tr("Save failed: ","فشل الحفظ: ")+error.message;
+  return;
+ }
+
+ for(const student of students.filter(s=>s.group_id===lesson.group_id)){
+  let q=db.from("lesson_attendance")
+   .select("id",{count:"exact",head:true})
+   .eq("student_id",student.id)
+   .in("status",["Present","Absent"]);
+
+  if(student.package_start_date)q=q.gte("attendance_date",student.package_start_date);
+
+  const {count,error:ce}=await q;
+
+  if(ce){
+   msg.textContent=tr("Attendance saved, but totals could not be updated: ","تم حفظ الحضور لكن تعذر تحديث عدد الحصص: ")+ce.message;
+   return;
+  }
+
+  const {error:ue}=await db.from("students").update({
+   completed_lessons:count||0
+  }).eq("id",student.id);
+
+  if(ue){
+   msg.textContent=tr("Attendance saved, but a student total could not be updated: ","تم حفظ الحضور لكن تعذر تحديث رصيد أحد الطلاب: ")+ue.message;
+   return;
+  }
+ }
+
+ msg.textContent=tr("Attendance saved successfully.","تم حفظ الحضور بنجاح.");
+ msg.classList.add("success");
+ await loadData();
+ await loadAttendance();
+}
+
 async function addPayment(e){
- e.preventDefault();const student=students.find(s=>s.id===document.getElementById("paymentStudent").value);if(!student){alert(tr("Choose a student.","اختاري طالبًا."));return}
- const amount=Number(document.getElementById("paymentAmount").value),date=document.getElementById("paymentDate").value,renew=document.getElementById("renewPackage").checked,msg=document.getElementById("paymentMessage");if(!(amount>0)||!date){alert(tr("Enter a valid amount and date.","أدخلي مبلغًا وتاريخًا صحيحين."));return}
- const old={package_start_date:student.package_start_date,completed_lessons:student.completed_lessons,paid:student.paid};
- if(renew){const {error}=await db.from("students").update({package_start_date:date,completed_lessons:0,paid:0}).eq("id",student.id);if(error){msg.textContent=error.message;return}}
+ e.preventDefault();
+
+ const student=students.find(s=>s.id===document.getElementById("paymentStudent").value);
+
+ if(!student){
+  alert(tr("Choose a student.","اختاري طالبًا."));
+  return;
+ }
+
+ const amount=Number(document.getElementById("paymentAmount").value);
+ const date=document.getElementById("paymentDate").value;
+ const renew=document.getElementById("renewPackage").checked;
+ const msg=document.getElementById("paymentMessage");
+
+ if(!(amount>0)||!date){
+  alert(tr("Enter a valid amount and date.","أدخلي مبلغًا وتاريخًا صحيحين."));
+  return;
+ }
+
+ const old={
+  package_start_date:student.package_start_date,
+  completed_lessons:student.completed_lessons,
+  paid:student.paid
+ };
+
+ if(renew){
+  const {error}=await db.from("students").update({
+   package_start_date:date,
+   completed_lessons:0,
+   paid:0
+  }).eq("id",student.id);
+
+  if(error){msg.textContent=error.message;return}
+ }
+
  const cycleDate=renew?date:(student.package_start_date||date);
- const {error:payError}=await db.from("payments").insert({student_id:student.id,amount,payment_date:date,payment_method:document.getElementById("paymentMethod").value,notes:document.getElementById("paymentNotes").value||null,package_start_date:cycleDate});
- if(payError){if(renew){const {error:rb}=await db.from("students").update(old).eq("id",student.id);msg.textContent=tr("Payment failed. ","فشل تسجيل الدفعة. ")+payError.message+(rb?tr(" WARNING: package rollback also failed: "," تحذير: فشل التراجع عن تحديث الباقة أيضًا: ")+rb.message:" "+tr("The previous package settings were restored.","تمت استعادة بيانات الباقة السابقة."))}else msg.textContent=payError.message;return}
- msg.textContent=tr("Payment saved successfully.","تم تسجيل الدفعة بنجاح.");e.target.reset();document.getElementById("paymentDate").value=new Date().toLocaleDateString("en-CA");await loadData()
+
+ const {error:payError}=await db.from("payments").insert({
+  student_id:student.id,
+  amount,
+  payment_date:date,
+  payment_method:document.getElementById("paymentMethod").value,
+  notes:document.getElementById("paymentNotes").value||null,
+  package_start_date:cycleDate
+ });
+
+ if(payError){
+  if(renew){
+   const {error:rb}=await db.from("students").update(old).eq("id",student.id);
+   msg.textContent=tr("Payment failed. ","فشل تسجيل الدفعة. ")+payError.message+
+    (rb?tr(" WARNING: package rollback also failed: "," تحذير: فشل التراجع عن تحديث الباقة أيضًا: ")+rb.message:" "+tr("The previous package settings were restored.","تمت استعادة بيانات الباقة السابقة."));
+  }else{
+   msg.textContent=payError.message;
+  }
+  return;
+ }
+
+ msg.textContent=tr("Payment saved successfully.","تم تسجيل الدفعة بنجاح.");
+ e.target.reset();
+ document.getElementById("paymentDate").value=new Date().toLocaleDateString("en-CA");
+ await loadData();
 }
-function renderPaymentHistory(){const tbody=document.getElementById("paymentHistory"),filter=document.getElementById("paymentFilter");if(!tbody||!filter)return;const id=filter.value;const rows=payments.filter(p=>!id||p.student_id===id);tbody.innerHTML=rows.map(p=>{const s=students.find(x=>x.id===p.student_id);let method=p.payment_method||"Other";if(method==="Opening Balance")method=tr("Opening balance","رصيد سابق");return `<tr><td>${esc(p.payment_date||"")}</td><td>${esc(s?.name||"-")}</td><td>${money(p.amount)}</td><td>${esc(method)}</td><td>${esc(p.notes||"-")}</td></tr>`}).join("")||`<tr><td colspan="5">${tr("No payments found.","لا توجد دفعات.")}</td></tr>`}
-function money(v){return Number(v||0).toLocaleString("en-EG")+" EGP"}
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function renderPaymentHistory(){
+ const tbody=document.getElementById("paymentHistory");
+ const filter=document.getElementById("paymentFilter");
+
+ if(!tbody||!filter)return;
+
+ const id=filter.value;
+ const rows=payments.filter(p=>!id||p.student_id===id);
+
+ tbody.innerHTML=rows.map(p=>{
+  const s=students.find(x=>x.id===p.student_id);
+  let method=p.payment_method||"Other";
+  if(method==="Opening Balance")method=tr("Opening balance","رصيد سابق");
+
+  return `<tr>
+   <td>${esc(p.payment_date||"")}</td>
+   <td>${esc(s?.name||"-")}</td>
+   <td>${money(p.amount)}</td>
+   <td>${esc(method)}</td>
+   <td>${esc(p.notes||"-")}</td>
+  </tr>`;
+ }).join("")||`<tr><td colspan="5">${tr("No payments found.","لا توجد دفعات.")}</td></tr>`;
+}
+
+function money(v){
+ return Number(v||0).toLocaleString("en-EG")+" EGP";
+}
+
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[c]));
+}
+
 document.getElementById("paymentDate").value=new Date().toLocaleDateString("en-CA");
-db.auth.getSession().then(({data})=>{if(data.session){currentUser=data.session.user;openApp()}});
+
+db.auth.getSession().then(({data})=>{
+ if(data.session){
+  currentUser=data.session.user;
+  openApp();
+ }
+});
 </script>
-</body></html>
+</body>
+</html>
