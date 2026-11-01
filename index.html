@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manar El Araby</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#263247}
+header{background:#fff;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px #0001}
+h1{font-size:22px;color:#7254a5;margin:0}
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:15px;background:#fff}
+nav button,button{border:0;border-radius:8px;padding:11px 15px;background:#7254a5;color:white;cursor:pointer}
+nav button{background:#eee;color:#333}
+nav button.active{background:#7254a5;color:white}
+main{padding:22px;max-width:1100px;margin:auto}
+.card{background:white;padding:20px;border-radius:12px;margin-bottom:16px;box-shadow:0 2px 8px #0001}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px}
+.number{font-size:28px;font-weight:bold;color:#7254a5;margin-top:10px}
+input,select{padding:11px;border:1px solid #ddd;border-radius:7px;width:100%;margin:6px 0 14px}
+label{font-size:14px;font-weight:bold}
+form{max-width:500px}
+table{width:100%;border-collapse:collapse;background:white}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #eee}
+th{background:#f7f4fb}
+.hidden{display:none}
+.muted{color:#777;font-size:13px}
+.danger{background:#c84b4b}
+#login{max-width:400px;margin:70px auto}
+@media(max-width:600px){main{padding:12px}header{padding:15px}nav{gap:5px}nav button{padding:9px;font-size:12px}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Manar El Araby</h1>
+  <button id="logout" class="hidden" onclick="logout()">Log out</button>
+</header>
+
+<section id="login" class="card">
+  <h2>Welcome, Manar!</h2>
+  <p class="muted">Sign in to manage your students and lessons.</p>
+  <form onsubmit="login(event)">
+    <label>Email</label>
+    <input id="email" type="email" required placeholder="Email address">
+    <label>Password</label>
+    <input id="password" type="password" required placeholder="Password">
+    <button type="submit">Sign in</button>
+  </form>
+  <p id="loginMessage" class="muted"></p>
+</section>
+
+<div id="app" class="hidden">
+<nav>
+  <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+  <button onclick="showPage('students',this)">Students</button>
+  <button onclick="showPage('groups',this)">Groups</button>
+  <button onclick="showPage('lessons',this)">Schedule</button>
+  <button onclick="showPage('payments',this)">Payments</button>
+</nav>
+
+<main>
+<section id="dashboard">
+  <h2>Dashboard</h2>
+  <div class="cards">
+    <div class="card">Total Students<div class="number" id="totalStudents">0</div></div>
+    <div class="card">Total Groups<div class="number" id="totalGroups">0</div></div>
+    <div class="card">Outstanding Payments<div class="number" id="outstanding">0</div></div>
+  </div>
+  <div class="card">
+    <h3>Students per Group</h3>
+    <div id="groupSummary">No groups yet.</div>
+  </div>
+</section>
+
+<section id="students" class="hidden">
+  <h2>Students</h2>
+  <div class="card">
+    <h3>Add Student</h3>
+    <form onsubmit="addStudent(event)">
+      <label>Student Name</label><input id="studentName" required>
+      <label>Group</label><select id="studentGroup"><option value="">No group</option></select>
+      <label>Package Price</label><input id="studentPrice" type="number" min="0" value="0">
+      <label>Amount Paid</label><input id="studentPaid" type="number" min="0" value="0">
+      <label>Total Lessons</label><input id="studentTotal" type="number" min="0" value="8">
+      <button type="submit">Add Student</button>
+    </form>
+  </div>
+  <div class="card">
+    <h3>Students List</h3>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>Name</th><th>Group</th><th>Price</th><th>Paid</th><th>Remaining</th><th>Lessons Left</th></tr></thead>
+      <tbody id="studentsList"></tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="groups" class="hidden">
+  <h2>Groups</h2>
+  <div class="card">
+    <h3>Add Group</h3>
+    <form onsubmit="addGroup(event)">
+      <label>Group Name</label><input id="groupName" required>
+      <label>Schedule</label><input id="groupSchedule" placeholder="Sunday & Tuesday - 5:00 PM">
+      <label>Monthly Price</label><input id="groupPrice" type="number" min="0" value="0">
+      <label>Maximum Students</label><input id="groupMax" type="number" min="1" value="10">
+      <button type="submit">Add Group</button>
+    </form>
+  </div>
+  <div class="card"><h3>Groups List</h3><div id="groupsList"></div></div>
+</section>
+
+<section id="lessons" class="hidden">
+  <h2>Schedule</h2>
+  <div class="card">
+    <h3>Add Lesson</h3>
+    <form onsubmit="addLesson(event)">
+      <label>Lesson Title</label><input id="lessonTitle" required>
+      <label>Group</label><select id="lessonGroup" required></select>
+      <label>Lesson Date</label><input id="lessonDate" type="date" required>
+      <label>Day</label>
+      <select id="lessonDay">
+        <option>Sunday</option><option>Monday</option><option>Tuesday</option>
+        <option>Wednesday</option><option>Thursday</option>
+      </select>
+      <label>Start Time</label><input id="startTime" type="time" required>
+      <label>End Time</label><input id="endTime" type="time" required>
+      <button type="submit">Add Lesson</button>
+    </form>
+  </div>
+  <div class="card"><h3>Lessons List</h3><div id="lessonsList"></div></div>
+</section>
+
+<section id="payments" class="hidden">
+  <h2>Payments</h2>
+  <div class="card">
+    <h3>Payment Overview</h3>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>Student</th><th>Package Price</th><th>Paid</th><th>Remaining</th></tr></thead>
+      <tbody id="paymentsList"></tbody>
+    </table></div>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+const SUPABASE_URL = "https://kdggtwdiyrbfdwrsfxrb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_LjlqunyD6_OdIizWQ4PDGQ_cssL4Lsy";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let students = [];
+let groups = [];
+let lessons = [];
+
+function showPage(id,button){
+  document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+}
+
+async function login(e){
+  e.preventDefault();
+  const msg=document.getElementById("loginMessage");
+  msg.textContent="Signing in...";
+  const {data,error}=await db.auth.signInWithPassword({
+    email:document.getElementById("email").value,
+    password:document.getElementById("password").value
+  });
+  if(error){msg.textContent=error.message;return;}
+  currentUser=data.user;
+  openApp();
+}
+
+async function logout(){
+  await db.auth.signOut();
+  currentUser=null;
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("logout").classList.add("hidden");
+}
+
+async function openApp(){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("logout").classList.remove("hidden");
+  await loadData();
+}
+
+async function loadData(){
+  const [s,g,l]=await Promise.all([
+    db.from("students").select("*").order("created_at",{ascending:false}),
+    db.from("groups").select("*").order("created_at",{ascending:false}),
+    db.from("lessons").select("*").order("lesson_date",{ascending:true})
+  ]);
+  if(s.error||g.error||l.error){
+    alert("Could not load data. Please check your database settings.");
+    console.error(s.error,g.error,l.error);
+    return;
+  }
+  students=s.data||[];
+  groups=g.data||[];
+  lessons=l.data||[];
+  render();
+}
+
+function render(){
+  document.getElementById("totalStudents").textContent=students.length;
+  document.getElementById("totalGroups").textContent=groups.length;
+  document.getElementById("outstanding").textContent=
+    students.reduce((sum,s)=>sum+Number(s.package_price||0)-Number(s.paid||0),0).toLocaleString();
+
+  const groupOptions='<option value="">No group</option>'+groups.map(g=>
+    `<option value="${g.id}">${esc(g.name)}</option>`).join("");
+  document.getElementById("studentGroup").innerHTML=groupOptions;
+  document.getElementById("lessonGroup").innerHTML=groups.map(g=>
+    `<option value="${g.id}">${esc(g.name)}</option>`).join("");
+
+  document.getElementById("studentsList").innerHTML=students.map(s=>{
+    const group=groups.find(g=>g.id===s.group_id);
+    return `<tr><td>${esc(s.name)}</td><td>${group?esc(group.name):"-"}</td>
+    <td>${money(s.package_price)}</td><td>${money(s.paid)}</td>
+    <td>${money(Number(s.package_price)-Number(s.paid))}</td>
+    <td>${Number(s.total_lessons||0)-Number(s.completed_lessons||0)}</td></tr>`;
+  }).join("");
+
+  document.getElementById("groupsList").innerHTML=groups.map(g=>{
+    const count=students.filter(s=>s.group_id===g.id).length;
+    return `<p><b>${esc(g.name)}</b> — ${count} students / ${g.max_students||"-"} max
+    <br><span class="muted">${esc(g.schedule||"No schedule set")}</span></p>`;
+  }).join("")||"No groups yet.";
+
+  document.getElementById("groupSummary").innerHTML=groups.map(g=>
+    `<p>${esc(g.name)}: ${students.filter(s=>s.group_id===g.id).length} students</p>`
+  ).join("")||"No groups yet.";
+
+  document.getElementById("lessonsList").innerHTML=lessons.map(l=>{
+    const group=groups.find(g=>g.id===l.group_id);
+    return `<p><b>${esc(l.title)}</b> — ${group?esc(group.name):"-"}<br>
+    ${esc(l.lesson_date||"")} | ${esc(l.day)} | ${esc(l.start_time)} - ${esc(l.end_time)}</p>`;
+  }).join("")||"No lessons yet.";
+
+  document.getElementById("paymentsList").innerHTML=students.map(s=>
+    `<tr><td>${esc(s.name)}</td><td>${money(s.package_price)}</td>
+    <td>${money(s.paid)}</td><td>${money(Number(s.package_price)-Number(s.paid))}</td></tr>`
+  ).join("");
+}
+
+async function addStudent(e){
+  e.preventDefault();
+  const {error}=await db.from("students").insert({
+    user_id:currentUser.id,
+    name:document.getElementById("studentName").value,
+    group_id:document.getElementById("studentGroup").value||null,
+    package_price:Number(document.getElementById("studentPrice").value),
+    paid:Number(document.getElementById("studentPaid").value),
+    total_lessons:Number(document.getElementById("studentTotal").value),
+    completed_lessons:0
+  });
+  if(error){alert(error.message);return;}
+  e.target.reset();await loadData();
+}
+
+async function addGroup(e){
+  e.preventDefault();
+  const {error}=await db.from("groups").insert({
+    user_id:currentUser.id,
+    name:document.getElementById("groupName").value,
+    schedule:document.getElementById("groupSchedule").value,
+    monthly_price:Number(document.getElementById("groupPrice").value),
+    max_students:Number(document.getElementById("groupMax").value)
+  });
+  if(error){alert(error.message);return;}
+  e.target.reset();await loadData();
+}
+
+async function addLesson(e){
+  e.preventDefault();
+  const start=document.getElementById("startTime").value;
+  const end=document.getElementById("endTime").value;
+  if(end<=start){alert("End time must be after start time.");return;}
+  const {error}=await db.from("lessons").insert({
+    user_id:currentUser.id,
+    title:document.getElementById("lessonTitle").value,
+    group_id:document.getElementById("lessonGroup").value,
+    lesson_date:document.getElementById("lessonDate").value,
+    day:document.getElementById("lessonDay").value,
+    start_time:start,
+    end_time:end
+  });
+  if(error){alert(error.message);return;}
+  e.target.reset();await loadData();
+}
+
+function money(value){
+  return Number(value||0).toLocaleString("en-EG")+" EGP";
+}
+function esc(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+db.auth.getSession().then(({data})=>{
+  if(data.session){currentUser=data.session.user;openApp();}
+});
+</script>
+</body>
+</html>
