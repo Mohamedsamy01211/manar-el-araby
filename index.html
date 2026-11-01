@@ -103,7 +103,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(err => console.error('PWA registration failed:', err));
   });
 }
-</script>
+<\/script>
 \n</body></html>`;const w=window.open('','_blank');if(!w){alert('اسمحي بفتح النوافذ المنبثقة لطباعة الجدول.');return}w.document.open();w.document.write(html);w.document.close()}
 (async()=>{const {data:{session}}=await db.auth.getSession();if(session){user=session.user;await routeUser()}fillDays();$('lessonDate').value=today();$('payDate').value=today();})();
 </script>
