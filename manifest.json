@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "ميس منار العربي",
+  "short_name": "منار العربي",
+  "description": "بوابة ميس منار العربي لمتابعة الطلاب والدروس والحضور والغياب والحصص المتبقية.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f3f9",
+  "theme_color": "#7652a5",
+  "icons": [
+    {
+      "src": "https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
