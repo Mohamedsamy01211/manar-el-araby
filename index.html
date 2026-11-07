@@ -105,6 +105,103 @@ if ('serviceWorker' in navigator) {
 }
 <\/script>
 \n</body></html>`;const w=window.open('','_blank');if(!w){alert('اسمحي بفتح النوافذ المنبثقة لطباعة الجدول.');return}w.document.open();w.document.write(html);w.document.close()}
+
+/* Student package controls and renewal history */
+var packageRecords = [];
+var originalLoadAdminDataForPackages = loadAdminData;
+function getCurrentPackageRecord(studentId){return packageRecords.find(p=>p.student_id===studentId&&p.is_current)||null}
+function getStudentPackageCount(studentId){return packageRecords.filter(p=>p.student_id===studentId).length||1}
+function packageStatusLabel(p){return p?.payment_status==='paid'?'تم الدفع':p?.payment_status==='partial'?'دفع جزئي':'لم يتم الدفع'}
+async function loadAdminData(){
+  await originalLoadAdminDataForPackages();
+  if(!students.length)return;
+  let result=await db.from('student_packages').select('*');
+  if(result.error){alert('لتفعيل إدارة الباقات، شغّلي ملف SQL الخاص بالباقات في Supabase أولاً: '+result.error.message);return}
+  packageRecords=result.data||[];
+  for(const s of students){
+    if(!getCurrentPackageRecord(s.id)){
+      const amount=Number(s.paid||0),price=Number(s.package_price||0);
+      const {error}=await db.from('student_packages').insert({
+        student_id:s.id,user_id:user.id,package_number:getStudentPackageCount(s.id),
+        package_price:price,total_lessons:Number(s.total_lessons||0),
+        completed_lessons:Number(s.completed_lessons||0),paid_amount:amount,
+        payment_status:amount>=price&&price>0?'paid':amount>0?'partial':'unpaid',
+        start_date:s.package_start_date||today(),is_current:true
+      });
+      if(error){alert('تعذر إنشاء سجل باقة للطالب '+s.name+': '+error.message);return}
+    }
+  }
+  result=await db.from('student_packages').select('*');
+  if(result.error){alert(result.error.message);return}
+  packageRecords=result.data||[];
+  renderStudentPackageControls();
+}
+function renderStudentPackageControls(){
+  const rows=[...$('studentsTable').querySelectorAll('tbody tr')];
+  students.forEach((s,index)=>{
+    const row=rows[index];if(!row||!row.cells||row.cells.length<11)return;
+    const p=getCurrentPackageRecord(s.id);
+    const count=getStudentPackageCount(s.id);
+    const price=Number(p?.package_price??s.package_price??0);
+    const paid=Number(p?.paid_amount??s.paid??0);
+    const status=p?.payment_status||(paid>=price&&price>0?'paid':paid>0?'partial':'unpaid');
+    row.cells[0].insertAdjacentHTML('beforeend',`<div class="muted small">عدد الباقات: ${count}</div><span class="pill">${packageStatusLabel({payment_status:status})}</span>`);
+    row.cells[6].textContent=money(paid);
+    row.cells[7].textContent=money(Math.max(0,price-paid));
+    const actions=row.cells[10].querySelector('.actions');
+    if(actions&&!actions.dataset.packageActions){
+      actions.dataset.packageActions='1';
+      actions.insertAdjacentHTML('afterbegin',`<button class="success" onclick="setStudentPackagePayment('${s.id}','paid')">تم الدفع</button><button class="danger" onclick="setStudentPackagePayment('${s.id}','unpaid')">لم يتم الدفع</button><button class="secondary" onclick="renewStudentPackage('${s.id}')">تجديد الباقة</button>`);
+    }
+  });
+  $('mBalance').textContent=money(students.reduce((sum,s)=>{
+    const p=getCurrentPackageRecord(s.id),price=Number(p?.package_price??s.package_price??0),paid=Number(p?.paid_amount??s.paid??0);
+    return sum+Math.max(0,price-paid);
+  },0));
+}
+async function setStudentPackagePayment(studentId,status){
+  const s=students.find(x=>x.id===studentId),p=getCurrentPackageRecord(studentId);
+  if(!s||!p)return alert('سجل الباقة غير موجود. حدّث الصفحة وحاول مرة أخرى.');
+  const paid=status==='paid'?Number(p.package_price||0):0;
+  const {error}=await db.from('student_packages').update({payment_status:status,paid_amount:paid}).eq('id',p.id).eq('user_id',user.id);
+  if(error)return alert('تعذر تحديث حالة الدفع: '+error.message);
+  const {error:studentError}=await db.from('students').update({paid}).eq('id',studentId).eq('user_id',user.id);
+  if(studentError)return alert('تم تحديث حالة الباقة لكن تعذر تحديث بيانات الطالب: '+studentError.message);
+  await loadAdminData();
+}
+async function renewStudentPackage(studentId){
+  const s=students.find(x=>x.id===studentId);if(!s)return;
+  const priceText=prompt('سعر الباقة الجديدة:',String(s.package_price||0));if(priceText===null)return;
+  const lessonsText=prompt('عدد حصص الباقة الجديدة:',String(s.total_lessons||8));if(lessonsText===null)return;
+  const price=Number(priceText),total=Number(lessonsText);
+  if(!Number.isFinite(price)||price<0||!Number.isInteger(total)||total<1)return alert('اكتبي سعر وعدد حصص صحيحين.');
+  if(!confirm('تأكيد إنشاء باقة جديدة بحالة «لم يتم الدفع»؟'))return;
+  const old=getCurrentPackageRecord(studentId),nextNumber=getStudentPackageCount(studentId)+1;
+  if(old){
+    const {error}=await db.from('student_packages').update({is_current:false}).eq('id',old.id).eq('user_id',user.id);
+    if(error)return alert('تعذر إغلاق الباقة الحالية: '+error.message);
+  }
+  const {data:newPackage,error:packageError}=await db.from('student_packages').insert({
+    student_id:studentId,user_id:user.id,package_number:nextNumber,package_price:price,
+    total_lessons:total,completed_lessons:0,paid_amount:0,payment_status:'unpaid',
+    start_date:today(),is_current:true
+  }).select('*').single();
+  if(packageError){
+    if(old)await db.from('student_packages').update({is_current:true}).eq('id',old.id).eq('user_id',user.id);
+    return alert('تعذر إنشاء الباقة الجديدة: '+packageError.message);
+  }
+  const {error:studentError}=await db.from('students').update({
+    package_price:price,total_lessons:total,completed_lessons:0,paid:0,package_start_date:today()
+  }).eq('id',studentId).eq('user_id',user.id);
+  if(studentError){
+    await db.from('student_packages').delete().eq('id',newPackage.id).eq('user_id',user.id);
+    if(old)await db.from('student_packages').update({is_current:true}).eq('id',old.id).eq('user_id',user.id);
+    return alert('تم إلغاء التجديد بسبب خطأ تحديث بيانات الطالب: '+studentError.message);
+  }
+  await loadAdminData();
+  alert('تم إنشاء الباقة رقم '+nextNumber+' بنجاح، وحالة الدفع: لم يتم الدفع.');
+}
+
 (async()=>{const {data:{session}}=await db.auth.getSession();if(session){user=session.user;await routeUser()}fillDays();$('lessonDate').value=today();$('payDate').value=today();})();
 </script>
 </body></html>
