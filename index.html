@@ -63,28 +63,18 @@ $('attendanceLesson').innerHTML='<option value="">اختاري الحصة</optio
 $('paymentsTable').innerHTML='<div class="table-wrap"><table><thead><tr><th>الطالب</th><th>سعر الباقة</th><th>المدفوع</th><th>المتبقي</th><th>حصص متبقية</th></tr></thead><tbody>'+students.map(s=>`<tr><td>${esc(s.name)}</td><td>${money(s.package_price)}</td><td>${money(paidFor(s))}</td><td>${money(Math.max(0,Number(s.package_price||0)-paidFor(s)))}</td><td>${leftFor(s)}</td></tr>`).join('')+'</tbody></table></div>';
 $('paymentHistory').innerHTML='<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الطالب</th><th>المبلغ</th><th>الطريقة</th><th>ملاحظات</th></tr></thead><tbody>'+payments.slice().sort((a,b)=>String(b.payment_date).localeCompare(String(a.payment_date))).map(p=>`<tr><td>${esc(p.payment_date)}</td><td>${esc(students.find(s=>s.id===p.student_id)?.name||'')}</td><td>${money(p.amount)}</td><td>${esc(p.payment_method)}</td><td>${esc(p.notes||'')}</td></tr>`).join('')+'</tbody></table></div>';
 function renderTodayLessons(){
- const day=DAYS[new Date().getDay()],date=today(),items=[];
- for(const x of groupSchedules.filter(x=>x.day===day)){
+ const items=[];
+ for(const x of groupSchedules){
    const g=groups.find(g=>g.id===x.group_id),members=students.filter(s=>s.group_id===x.group_id);
    if(!g)continue;
-   items.push({key:'g-'+x.group_id+'-'+x.start_time,title:g.name,students:members.map(s=>s.name),type:'مجموعة',start:x.start_time,end:x.end_time});
+   items.push({key:'g-'+x.group_id+'-'+x.day+'-'+x.start_time,title:g.name,students:members.map(s=>s.name),type:'مجموعة',day:x.day,start:x.start_time,end:x.end_time});
  }
- for(const x of privateSchedules.filter(x=>x.day===day)){
+ for(const x of privateSchedules){
    const s=students.find(s=>s.id===x.student_id);if(!s)continue;
-   items.push({key:'p-'+x.student_id+'-'+x.start_time,title:s.name,students:[s.name],type:'خاص',start:x.start_time,end:x.end_time});
+   items.push({key:'p-'+x.student_id+'-'+x.day+'-'+x.start_time,title:s.name,students:[s.name],type:'خاص',day:x.day,start:x.start_time,end:x.end_time});
  }
- for(const l of lessons.filter(l=>l.lesson_date===date)){
-   const g=groups.find(g=>g.id===l.group_id),s=students.find(s=>s.id===l.student_id);
-   const key=l.group_id?'g-'+l.group_id+'-'+l.start_time:'p-'+l.student_id+'-'+l.start_time;
-   if(items.some(x=>x.key===key))continue;
-   const members=l.group_id?students.filter(s=>s.group_id===l.group_id):s?[s]:[];
-   items.push({key,title:l.title||g?.name||s?.name||'حصة',students:members.map(s=>s.name),type:l.group_id?'مجموعة':'خاص',start:l.start_time,end:l.end_time});
- }
- items.sort((a,b)=>String(a.start).localeCompare(String(b.start)));
- $('todayLessons').innerHTML=items.length?'<div class="table-wrap"><table><thead><tr><th>الميعاد</th><th>المجموعة / الطالب</th><th>الطلاب</th><th>النوع</th></tr></thead><tbody>'+items.map(x=>'<tr><td>'+esc(x.start)+' - '+esc(x.end)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.students.join('، ')||'لا يوجد طلاب')+'</td><td>'+esc(x.type)+'</td></tr>').join('')+'</tbody></table></div>':'<p class="muted">مفيش حصص مسجلة النهارده ('+dayAr(day)+').</p>';
-}
-$('groupCounts').innerHTML=groups.map(g=>`<p>${esc(g.name)}: ${students.filter(s=>s.group_id===g.id).length} طالب من ${g.max_students||'غير محدد'}</p>`).join('')||'<p>لا توجد مجموعات</p>';
-const due=students.filter(s=>Number(s.total_lessons||0)>0&&leftFor(s)<=1);$('renewalAlerts').innerHTML=due.map(s=>`<div class="notice"><b>${esc(s.name)}</b>: ${leftFor(s)===0?'الباقة انتهت — مطلوب تجديد':'متبقي حصة واحدة فقط'}.</div>`).join('')||'<p class="muted">لا توجد تنبيهات تجديد حالياً.</p>';renderTodayLessons();
+ items.sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||String(a.start).localeCompare(String(b.start)));
+ $('todayLessons').innerHTML=items.length?'<div class="table-wrap"><table><thead><tr><th>اليوم</th><th>الميعاد</th><th>المجموعة / الطالب</th><th>الطلاب</th><th>النوع</th></tr></thead><tbody>'+items.map(x=>'<tr><td>'+dayAr(x.day)+'</td><td>'+esc(x.start)+' - '+esc(x.end)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.students.join('، ')||'لا يوجد طلاب')+'</td><td>'+esc(x.type)+'</td></tr>').join('')+'</tbody></table></div>':'<p class="muted">لا توجد مواعيد أسبوعية مسجلة حتى الآن.</p>';
 }
 function studentTypeChanged(){$('stGroupWrap').classList.toggle('hidden',$('stType').value==='Private');if($('stType').value==='Group'&&$('stGroup').value&&!$('editStudentId').value){const g=groups.find(x=>x.id===$('stGroup').value);if(g&&(!$('stPrice').value||Number($('stPrice').value)===0))$('stPrice').value=g.package_price??g.monthly_price??0}}
 $('stGroup').addEventListener('change',()=>{const g=groups.find(x=>x.id===$('stGroup').value);if(g&&!$('editStudentId').value)$('stPrice').value=g.package_price??g.monthly_price??0});
