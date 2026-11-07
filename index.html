@@ -65,16 +65,26 @@ $('paymentHistory').innerHTML='<div class="table-wrap"><table><thead><tr><th>ا�
 function renderTodayLessons(){
  const items=[];
  for(const x of groupSchedules){
-   const g=groups.find(g=>g.id===x.group_id),members=students.filter(s=>s.group_id===x.group_id);
-   if(!g)continue;
-   items.push({key:'g-'+x.group_id+'-'+x.day+'-'+x.start_time,title:g.name,students:members.map(s=>s.name),type:'مجموعة',day:x.day,start:x.start_time,end:x.end_time});
+   const g=groups.find(g=>g.id===x.group_id);if(!g)continue;
+   items.push({key:'g-'+x.id,title:g.name,students:students.filter(s=>s.group_id===x.group_id).map(s=>s.name),type:'مجموعة',day:x.day,date:'',start:x.start_time,end:x.end_time,kind:'أسبوعي'});
  }
  for(const x of privateSchedules){
    const s=students.find(s=>s.id===x.student_id);if(!s)continue;
-   items.push({key:'p-'+x.student_id+'-'+x.day+'-'+x.start_time,title:s.name,students:[s.name],type:'خاص',day:x.day,start:x.start_time,end:x.end_time});
+   items.push({key:'p-'+x.id,title:s.name,students:[s.name],type:'خاص',day:x.day,date:'',start:x.start_time,end:x.end_time,kind:'أسبوعي'});
  }
- items.sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||String(a.start).localeCompare(String(b.start)));
- $('todayLessons').innerHTML=items.length?'<div class="table-wrap"><table><thead><tr><th>اليوم</th><th>الميعاد</th><th>المجموعة / الطالب</th><th>الطلاب</th><th>النوع</th></tr></thead><tbody>'+items.map(x=>'<tr><td>'+dayAr(x.day)+'</td><td>'+esc(x.start)+' - '+esc(x.end)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.students.join('، ')||'لا يوجد طلاب')+'</td><td>'+esc(x.type)+'</td></tr>').join('')+'</tbody></table></div>':'<p class="muted">لا توجد مواعيد أسبوعية مسجلة حتى الآن.</p>';
+ for(const l of lessons){
+   const g=groups.find(g=>g.id===l.group_id),s=students.find(s=>s.id===l.student_id);
+   const members=l.group_id?students.filter(s=>s.group_id===l.group_id):s?[s]:[];
+   items.push({key:'l-'+l.id,title:l.title||g?.name||s?.name||'حصة',students:members.map(s=>s.name),type:l.group_id?'مجموعة':'خاص',day:l.day||'',date:l.lesson_date||'',start:l.start_time||'',end:l.end_time||'',kind:'بتاريخ محدد'});
+ }
+ items.sort((a,b)=>{
+   const da=a.date||'9999-12-31',db=b.date||'9999-12-31';
+   if(da!==db)return da.localeCompare(db);
+   const dayDiff=DAYS.indexOf(a.day)-DAYS.indexOf(b.day);
+   if(!a.date&&!b.date&&dayDiff!==0)return dayDiff;
+   return String(a.start).localeCompare(String(b.start));
+ });
+ $('todayLessons').innerHTML=items.length?'<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>اليوم</th><th>الميعاد</th><th>المجموعة / الطالب</th><th>الطلاب</th><th>النوع</th></tr></thead><tbody>'+items.map(x=>'<tr><td>'+esc(x.date||'متكرر أسبوعياً')+'</td><td>'+esc(x.day?dayAr(x.day):'—')+'</td><td>'+esc(x.start)+' - '+esc(x.end)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.students.join('، ')||'لا يوجد طلاب')+'</td><td>'+esc(x.type)+' · '+esc(x.kind)+'</td></tr>').join('')+'</tbody></table></div>':'<p class="muted">لا توجد مواعيد مسجلة حالياً.</p>';
 }
 function studentTypeChanged(){$('stGroupWrap').classList.toggle('hidden',$('stType').value==='Private');if($('stType').value==='Group'&&$('stGroup').value&&!$('editStudentId').value){const g=groups.find(x=>x.id===$('stGroup').value);if(g&&(!$('stPrice').value||Number($('stPrice').value)===0))$('stPrice').value=g.package_price??g.monthly_price??0}}
 $('stGroup').addEventListener('change',()=>{const g=groups.find(x=>x.id===$('stGroup').value);if(g&&!$('editStudentId').value)$('stPrice').value=g.package_price??g.monthly_price??0});
