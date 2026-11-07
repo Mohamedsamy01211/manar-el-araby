@@ -19,7 +19,7 @@
 <section id="loginView" class="card login"><img class="login-logo" src="https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg" alt="ميس منار العربي"><h2 style="text-align:center">أهلاً بيكم</h2><p class="tagline">With Miss Manar, every lesson is a new step towards success!</p><div class="split"><div><h3>دخول منار / ولي الأمر</h3><form id="loginForm"><label>البريد الإلكتروني</label><input id="loginEmail" type="email" required autocomplete="username"><label>كلمة المرور</label><input id="loginPassword" type="password" required autocomplete="current-password"><button type="submit">تسجيل الدخول</button></form></div><div><h3>تسجيل ولي أمر جديد</h3><form id="signupForm"><label>اسم ولي الأمر</label><input id="parentName" required><label>رقم الموبايل</label><input id="parentPhone" type="tel"><label>البريد الإلكتروني</label><input id="parentEmail" type="email" required><label>كلمة المرور</label><input id="parentPassword" type="password" minlength="6" required><button type="submit" class="secondary">إنشاء حساب ولي أمر</button></form></div></div><p id="authMsg" class="muted"></p></section>
 <div id="adminApp" class="hidden"><nav id="adminNav"><button class="active" data-page="dashboard" onclick="showPage('dashboard',this)">الرئيسية</button><button data-page="students" onclick="showPage('students',this)">الطلاب</button><button data-page="groups" onclick="showPage('groups',this)">المجموعات</button><button data-page="schedules" onclick="showPage('schedules',this)">المواعيد الأسبوعية</button><button data-page="lessons" onclick="showPage('lessons',this)">الحصص</button><button data-page="attendance" onclick="showPage('attendance',this)">الحضور والغياب</button><button data-page="payments" onclick="showPage('payments',this)">المدفوعات</button><button data-page="parents" onclick="showPage('parents',this)">طلبات أولياء الأمور</button></nav><main>
 <section id="dashboard"><h2>الرئيسية</h2><div class="grid"><div class="card">إجمالي الطلاب<div class="metric" id="mStudents">0</div></div><div class="card">إجمالي المجموعات<div class="metric" id="mGroups">0</div></div><div class="card">إجمالي المبالغ المتبقية<div class="metric" id="mBalance">0</div></div></div><div class="card"><h3>تنبيهات تجديد الباقات</h3><div id="renewalAlerts"></div></div><div class="card"><h3>حصص اليوم</h3><div id="todayLessons"></div></div><div class="card"><h3>عدد الطلاب في كل مجموعة</h3><div id="groupCounts"></div></div></section>
-<section id="students" class="hidden"><h2>إدارة الطلاب</h2><div class="card"><h3 id="studentFormTitle">إضافة طالب جديد</h3><form id="studentForm"><input type="hidden" id="editStudentId"><label>اسم الطالب</label><input id="stName" required><label>الصف الدراسي</label><select id="stYear"><option value="">اختاري الصف</option><optgroup label="مرحلة ما قبل المدرسة"><option>Nursery</option><option>Daycare</option><option>KG1</option><option>KG2</option></optgroup><optgroup label="المرحلة الابتدائية"><option>Primary 1</option><option>Primary 2</option><option>Primary 3</option><option>Primary 4</option><option>Primary 5</option><option>Primary 6</option></optgroup><optgroup label="المرحلة الإعدادية"><option>Preparatory 1</option><option>Preparatory 2</option><option>Preparatory 3</option></optgroup><optgroup label="المرحلة الثانوية"><option>Secondary 1</option><option>Secondary 2</option><option>Secondary 3</option></optgroup></select><label>نوع الكورس</label><select id="stCourse"><option value="School Curriculum">School Curriculum</option><option value="English Course">English Course</option></select><label>نوع الدرس</label><select id="stType" onchange="studentTypeChanged()"><option value="Group">Group</option><option value="Private">Private</option></select><div id="stGroupWrap"><label>المجموعة</label><select id="stGroup"></select></div><label>سعر الباقة</label><input id="stPrice" type="number" min="0" step="0.01" required><label>عدد حصص الباقة</label><input id="stTotal" type="number" min="1" value="8" required><label>عدد الحصص المكتملة</label><input id="stCompleted" type="number" min="0" value="0" required><label>عدد الحصص أسبوعياً</label><input id="stWeekly" type="number" min="1" value="2"><div id="stPaidWrap"><label>المدفوع عند التسجيل</label><input id="stPaid" type="number" min="0" value="0"></div><button type="submit">حفظ الطالب</button><button type="button" class="secondary" onclick="resetStudentForm()">إلغاء</button></form></div><div class="card"><h3>قائمة الطلاب</h3><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الصف</th><th>نوع الكورس</th><th>النوع</th><th>المجموعة</th><th>سعر الباقة</th><th>المدفوع</th><th>المتبقي</th><th>حصص متبقية</th><th>كود ولي الأمر</th><th>إجراءات</th></tr></thead><tbody id="studentsTable"></tbody></table></div></div></section>
+<section id="students" class="hidden"><h2>إدارة الطلاب</h2><div class="card"><h3 id="studentFormTitle">إضافة طالب جديد</h3><form id="studentForm"><input type="hidden" id="editStudentId"><label>اسم الطالب</label><input id="stName" required><label>الصف الدراسي</label><select id="stYear"><option value="">اختاري الصف</option><optgroup label="مرحلة ما قبل المدرسة"><option>Nursery</option><option>Daycare</option><option>KG1</option><option>KG2</option></optgroup><optgroup label="المرحلة الابتدائية"><option>Primary 1</option><option>Primary 2</option><option>Primary 3</option><option>Primary 4</option><option>Primary 5</option><option>Primary 6</option></optgroup><optgroup label="المرحلة الإعدادية"><option>Preparatory 1</option><option>Preparatory 2</option><option>Preparatory 3</option></optgroup><optgroup label="المرحلة الثانوية"><option>Secondary 1</option><option>Secondary 2</option><option>Secondary 3</option></optgroup></select><label>نوع الكورس</label><select id="stCourse"><option value="School Curriculum">School Curriculum</option><option value="English Course">English Course</option></select><label>نوع الدرس</label><select id="stType" onchange="studentTypeChanged()"><option value="Group">Group</option><option value="Private">Private</option></select><div id="stGroupWrap"><label>المجموعة</label><select id="stGroup"></select></div><label>سعر الباقة</label><input id="stPrice" type="number" min="0" step="0.01" required><label>عدد حصص الباقة</label><input id="stTotal" type="number" min="1" value="8" required><label>عدد الحصص المكتملة</label><input id="stCompleted" type="number" min="0" value="0" required><label>عدد الحصص أسبوعياً</label><input id="stWeekly" type="number" min="1" value="2"><div id="stPaidWrap"><label>المدفوع عند التسجيل</label><input id="stPaid" type="number" min="0" value="0"></div><button type="submit">حفظ الطالب</button><button type="button" class="secondary" onclick="resetStudentForm()">إلغاء</button></form></div><div class="card"><h3>قائمة الطلاب</h3><div class="toolbar"><label for="studentAttendanceDate">تاريخ الحضور</label><input id="studentAttendanceDate" type="date" style="max-width:190px" value=""></div><p class="muted">اضغطي على مربع الحضور بجانب الطالب لتسجيل الحصة فورًا.</p><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الصف</th><th>نوع الكورس</th><th>النوع</th><th>المجموعة</th><th>سعر الباقة</th><th>المدفوع</th><th>المتبقي</th><th>حصص متبقية</th><th>حضور</th><th>كود ولي الأمر</th><th>إجراءات</th></tr></thead><tbody id="studentsTable"></tbody></table></div></div></section>
 <section id="groups" class="hidden"><h2>إدارة المجموعات</h2><div class="card"><h3 id="groupFormTitle">إضافة مجموعة</h3><form id="groupForm"><input id="editGroupId" type="hidden"><label>اسم المجموعة</label><input id="gName" required><label>الصف الدراسي</label><select id="gYear"><option value="">اختياري</option><option>Nursery</option><option>Daycare</option><option>KG1</option><option>KG2</option><option>Primary 1</option><option>Primary 2</option><option>Primary 3</option><option>Primary 4</option><option>Primary 5</option><option>Primary 6</option><option>Preparatory 1</option><option>Preparatory 2</option><option>Preparatory 3</option><option>Secondary 1</option><option>Secondary 2</option><option>Secondary 3</option></select><label>سعر الباقة للطالب</label><input id="gPrice" type="number" min="0" value="0"><label>الحد الأقصى للطلاب</label><input id="gMax" type="number" min="1" value="10"><label>عدد الحصص أسبوعياً</label><input id="gWeekly" type="number" min="1" value="2"><button type="submit">حفظ المجموعة</button><button type="button" class="secondary" onclick="resetGroupForm()">إلغاء</button></form></div><div class="card"><h3>المجموعات الحالية</h3><div id="groupsTable"></div></div></section>
 <section id="schedules" class="hidden"><h2>المواعيد الأسبوعية</h2><div class="split"><div class="card"><h3>موعد مجموعة</h3><form id="groupScheduleForm"><label>المجموعة</label><select id="gsGroup"></select><label>اليوم</label><select id="gsDay"></select><label>من</label><input id="gsStart" type="time" required><label>إلى</label><input id="gsEnd" type="time" required><button type="submit">حفظ الموعد</button></form></div><div class="card"><h3>موعد طالب خاص</h3><form id="privateScheduleForm"><label>الطالب</label><select id="psStudent"></select><label>اليوم</label><select id="psDay"></select><label>من</label><input id="psStart" type="time" required><label>إلى</label><input id="psEnd" type="time" required><button type="submit">حفظ الموعد</button></form></div></div><div class="card"><h3>مواعيد المجموعات</h3><div id="groupSchedulesTable"></div></div><div class="card"><h3>مواعيد الحصص الخاصة</h3><div id="privateSchedulesTable"></div></div></section>
 <section id="lessons" class="hidden"><h2>الحصص الفعلية</h2><div class="card"><h3>إضافة حصة بتاريخ محدد</h3><form id="lessonForm"><label>نوع الحصة</label><select id="lessonType" onchange="lessonTypeChanged()"><option value="Group">مجموعة</option><option value="Private">خاصة</option></select><div id="lessonGroupWrap"><label>المجموعة</label><select id="lessonGroup"></select></div><div id="lessonStudentWrap" class="hidden"><label>الطالب الخاص</label><select id="lessonStudent"></select></div><label>عنوان الحصة</label><input id="lessonTitle" required><label>تاريخ الحصة</label><input id="lessonDate" type="date" required><label>اليوم</label><select id="lessonDay"></select><label>من</label><input id="lessonStart" type="time" required><label>إلى</label><input id="lessonEnd" type="time" required><button type="submit">إضافة الحصة</button></form></div><div class="card"><h3>الحصص المسجلة</h3><div id="lessonsTable"></div></div></section>
@@ -34,7 +34,7 @@ const SUPABASE_KEY='sb_publishable_LjlqunyD6_OdIizWQ4PDGQ_cssL4Lsy';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const LOGO='https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg';
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-let user=null,role=null,students=[],groups=[],lessons=[],payments=[],groupSchedules=[],privateSchedules=[],attendanceCache=[];
+let user=null,role=null,students=[],groups=[],lessons=[],payments=[],groupSchedules=[],privateSchedules=[],attendanceCache=[];\nlet studentPresentIds=new Set();
 const $=id=>document.getElementById(id);const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const money=v=>`${Number(v||0).toLocaleString('en-EG')} ج.م`;
 function msg(t,ok=false){$('authMsg').textContent=t;$('authMsg').className=ok?'ok':'err'}
@@ -50,11 +50,11 @@ $('loginForm').addEventListener('submit',async e=>{e.preventDefault();msg('جا�
 $('signupForm').addEventListener('submit',async e=>{e.preventDefault();msg('جاري إنشاء الحساب...',true);const {data,error}=await db.auth.signUp({email:$('parentEmail').value,password:$('parentPassword').value,options:{data:{full_name:$('parentName').value,phone:$('parentPhone').value}}});if(error){msg(error.message);return}if(!data.session){msg('تم إنشاء الحساب. افتح بريدك الإلكتروني لتأكيد الحساب، ثم سجل الدخول.',true);return}user=data.user;const {error:pe}=await db.from('parent_profiles').upsert({user_id:user.id,full_name:$('parentName').value,phone:$('parentPhone').value||null});if(pe){msg('الحساب اتعمل لكن تعذر حفظ بيانات ولي الأمر: '+pe.message);return}await routeUser()});
 async function routeUser(){ $('loginView').classList.add('hidden');$('logoutBtn').classList.remove('hidden');$('userLabel').textContent=user.email||'';const {data:admin,error:ae}=await db.from('app_admins').select('user_id').eq('user_id',user.id).maybeSingle();if(ae){alert('تعذر التحقق من صلاحيات الحساب: '+ae.message);return}if(admin){role='admin';$('adminApp').classList.remove('hidden');$('parentApp').classList.add('hidden');await loadAdminData();return}let {data:profile,error:pe}=await db.from('parent_profiles').select('*').eq('user_id',user.id).maybeSingle();if(pe){alert('تعذر تحميل حساب ولي الأمر: '+pe.message);return}if(!profile){const meta=user.user_metadata||{};const fullName=meta.full_name||user.email?.split('@')[0]||'ولي أمر';const {error:insertProfileError}=await db.from('parent_profiles').upsert({user_id:user.id,full_name:fullName,phone:meta.phone||null});if(insertProfileError){alert('الحساب غير مسجل كمدير أو ولي أمر: '+insertProfileError.message);await logout();return}profile={full_name:fullName,phone:meta.phone||null}}role='parent';$('parentApp').classList.remove('hidden');$('adminApp').classList.add('hidden');$('profileName').value=profile.full_name||'';$('profilePhone').value=profile.phone||'';await loadParentData()}
 async function logout(){await db.auth.signOut();user=null;role=null;location.reload()}
-async function loadAdminDataBase(){ $('payDate').value=today();fillDays();const names=['students','groups','lessons','payments','group_schedules','private_schedules'];const results=await Promise.all(names.map(t=>db.from(t).select('*')));for(let i=0;i<results.length;i++){if(results[i].error){alert('مشكلة في تحميل '+names[i]+': '+results[i].error.message);return}}students=results[0].data||[];groups=results[1].data||[];lessons=results[2].data||[];payments=results[3].data||[];groupSchedules=results[4].data||[];privateSchedules=results[5].data||[];students.sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar'));lessons.sort((a,b)=>String(a.lesson_date).localeCompare(String(b.lesson_date)));renderAdmin()}
+async function loadAdminDataBase(){ $('payDate').value=today();$('studentAttendanceDate').value=today();fillDays();const names=['students','groups','lessons','payments','group_schedules','private_schedules'];const results=await Promise.all(names.map(t=>db.from(t).select('*')));for(let i=0;i<results.length;i++){if(results[i].error){alert('مشكلة في تحميل '+names[i]+': '+results[i].error.message);return}}students=results[0].data||[];groups=results[1].data||[];lessons=results[2].data||[];payments=results[3].data||[];groupSchedules=results[4].data||[];privateSchedules=results[5].data||[];students.sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar'));lessons.sort((a,b)=>String(a.lesson_date).localeCompare(String(b.lesson_date)));renderAdmin();await loadStudentAttendanceForDate();renderAdmin()}
 function paidFor(s){const start=s.package_start_date||'';const rows=payments.filter(p=>p.student_id===s.id&&(p.package_start_date?p.package_start_date===start:(!start||String(p.payment_date||'')>=start)));return rows.length?rows.reduce((n,p)=>n+Number(p.amount||0),0):Number(s.paid||0)}function leftFor(s){return Math.max(0,Number(s.total_lessons||0)-Number(s.completed_lessons||0))}
 function renderAdmin(){ $('mStudents').textContent=students.length;$('mGroups').textContent=groups.length;$('mBalance').textContent=money(students.reduce((n,s)=>n+Math.max(0,Number(s.package_price||0)-paidFor(s)),0));
 const groupOptions=groups.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('');['stGroup','gsGroup','lessonGroup'].forEach(id=>$(id).innerHTML=groupOptions);const studentOptions=students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');$('psStudent').innerHTML=students.filter(s=>s.lesson_type==='Private').map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');$('lessonStudent').innerHTML=students.filter(s=>s.lesson_type==='Private').map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');$('payStudent').innerHTML=studentOptions;
-$('studentsTable').innerHTML=students.map(s=>{const g=groups.find(x=>x.id===s.group_id);return `<tr><td>${esc(s.name)}</td><td>${esc(s.school_year||'-')}</td><td>${esc(s.course_type||'-')}</td><td>${esc(s.lesson_type||'Group')}</td><td>${esc(g?.name||'خاص / بدون مجموعة')}</td><td>${money(s.package_price)}</td><td>${money(paidFor(s))}</td><td>${money(Math.max(0,Number(s.package_price||0)-paidFor(s)))}</td><td>${leftFor(s)}</td><td><span class="code">${esc(s.parent_link_code||'—')}</span> <button class="secondary" onclick="copyText('${esc(s.parent_link_code||'')}')">نسخ</button></td><td><div class="actions"><button onclick="editStudent('${s.id}')">تعديل</button><button class="danger" onclick="deleteStudent('${s.id}')">حذف</button></div></td></tr>`}).join('')||'<tr><td colspan="11" class="empty">لا يوجد طلاب</td></tr>';
+$('studentsTable').innerHTML=students.map(s=>{const g=groups.find(x=>x.id===s.group_id);return `<tr><td>${esc(s.name)}</td><td>${esc(s.school_year||'-')}</td><td>${esc(s.course_type||'-')}</td><td>${esc(s.lesson_type||'Group')}</td><td>${esc(g?.name||'خاص / بدون مجموعة')}</td><td>${money(s.package_price)}</td><td>${money(paidFor(s))}</td><td>${money(Math.max(0,Number(s.package_price||0)-paidFor(s)))}</td><td>${leftFor(s)}</td><td><label class="inline" style="justify-content:center;margin:0"><input type="checkbox" class="student-attendance-check" data-student="${s.id}" ${studentPresentIds.has(s.id)?'checked':''} onchange="toggleStudentAttendance('${s.id}',this)"> حاضر</label></td><td><span class="code">${esc(s.parent_link_code||'—')}</span> <button class="secondary" onclick="copyText('${esc(s.parent_link_code||'')}')">نسخ</button></td><td><div class="actions"><button onclick="editStudent('${s.id}')">تعديل</button><button class="danger" onclick="deleteStudent('${s.id}')">حذف</button></div></td></tr>`}).join('')||'<tr><td colspan="12" class="empty">لا يوجد طلاب</td></tr>';
 $('groupsTable').innerHTML=groups.map(g=>`<div class="notice"><b>${esc(g.name)}</b> — ${students.filter(s=>s.group_id===g.id).length}/${g.max_students||'—'} طالب<br><span class="muted">${esc(g.school_year||'')} · ${g.lessons_per_week||'—'} حصص أسبوعياً · سعر الباقة ${money(g.package_price??g.monthly_price)}</span><div class="actions" style="margin-top:8px"><button onclick="editGroup('${g.id}')">تعديل</button><button class="secondary" onclick="showPage('schedules',document.querySelector('[data-page=schedules]'));$('gsGroup').value='${g.id}'">المواعيد</button><button class="secondary" onclick="printGroup('${g.id}')">طباعة / حفظ PDF</button><button class="danger" onclick="deleteGroup('${g.id}')">حذف</button></div></div>`).join('')||'<p class="empty">لا توجد مجموعات</p>';
 $('groupSchedulesTable').innerHTML=groupSchedules.map(x=>`<p>${esc(groups.find(g=>g.id===x.group_id)?.name||'مجموعة')} — ${dayAr(x.day)} ${esc(x.start_time)} إلى ${esc(x.end_time)} <button class="secondary" onclick="editSchedule('group_schedules','${x.id}')">تعديل</button> <button class="danger" onclick="deleteSchedule('group_schedules','${x.id}')">حذف</button></p>`).join('')||'<p class="empty">لا توجد مواعيد مجموعات</p>';
 $('privateSchedulesTable').innerHTML=privateSchedules.map(x=>`<p>${esc(students.find(s=>s.id===x.student_id)?.name||'طالب')} — ${dayAr(x.day)} ${esc(x.start_time)} إلى ${esc(x.end_time)} <button class="secondary" onclick="editSchedule('private_schedules','${x.id}')">تعديل</button> <button class="danger" onclick="deleteSchedule('private_schedules','${x.id}')">حذف</button></p>`).join('')||'<p class="empty">لا توجد مواعيد خاصة</p>';
@@ -107,6 +107,103 @@ async function editSchedule(table,id){const rows=table==='group_schedules'?group
 async function deleteSchedule(table,id){if(!confirm('حذف الموعد؟'))return;const {error}=await db.from(table).delete().eq('id',id);if(error)alert(error.message);else await loadAdminData()}
 function lessonTypeChanged(){const p=$('lessonType').value==='Private';$('lessonGroupWrap').classList.toggle('hidden',p);$('lessonStudentWrap').classList.toggle('hidden',!p)}
 $('lessonForm').addEventListener('submit',async e=>{e.preventDefault();const start=$('lessonStart').value,end=$('lessonEnd').value;if(end<=start){alert('وقت النهاية لازم يكون بعد البداية.');return}const priv=$('lessonType').value==='Private';const payload={user_id:user.id,title:$('lessonTitle').value.trim(),group_id:priv?null:$('lessonGroup').value,student_id:priv?$('lessonStudent').value:null,lesson_date:$('lessonDate').value,day:$('lessonDay').value,start_time:start,end_time:end};const {error}=await db.from('lessons').insert(payload);if(error)alert(error.message);else{e.target.reset();lessonTypeChanged();await loadAdminData()}});
+
+async function loadStudentAttendanceForDate(){
+  const date=$('studentAttendanceDate')?.value||today();
+  const {data,error}=await db.from('lesson_attendance').select('student_id,status').eq('attendance_date',date).eq('status','Present');
+  if(error){console.error('Attendance status load failed:',error.message);return}
+  studentPresentIds=new Set((data||[]).map(x=>x.student_id));
+}
+async function recalculateStudentLessons(studentId){
+  const s=students.find(x=>x.id===studentId);if(!s)return;
+  const {count,error}=await db.from('lesson_attendance').select('id',{count:'exact',head:true})
+    .eq('student_id',studentId).in('status',['Present','Absent'])
+    .gte('attendance_date',s.package_start_date||'1900-01-01');
+  if(error)throw error;
+  const completed=count||0;
+  const {error:updateError}=await db.from('students').update({completed_lessons:completed}).eq('id',studentId).eq('user_id',user.id);
+  if(updateError)throw updateError;
+  const currentPackage=getCurrentPackageRecord(studentId);
+  if(currentPackage){
+    const {error:packageUpdateError}=await db.from('student_packages').update({completed_lessons:completed}).eq('id',currentPackage.id).eq('user_id',user.id);
+    if(packageUpdateError)throw packageUpdateError;
+  }
+}
+async function toggleStudentAttendance(studentId,checkbox){
+  const date=$('studentAttendanceDate').value||today();
+  const s=students.find(x=>x.id===studentId);
+  if(!s){checkbox.checked=false;return}
+  checkbox.disabled=true;
+  try{
+    if(checkbox.checked){
+      const weekday=DAYS[new Date(date+'T12:00:00').getDay()];
+      const schedule=s.lesson_type==='Private'
+        ?privateSchedules.find(x=>x.student_id===studentId&&x.day===weekday)
+        :groupSchedules.find(x=>x.group_id===s.group_id&&x.day===weekday);
+      if(!schedule){
+        checkbox.checked=false;
+        alert('لا يوجد موعد أسبوعي مسجل لهذا الطالب في التاريخ المحدد ('+dayAr(weekday)+'). اختاري تاريخ يوم الحصة أو راجعي المواعيد الأسبوعية.');
+        return;
+      }
+      const isPrivate=s.lesson_type==='Private';
+      let lessonQuery=db.from('lessons').select('id')
+        .eq('lesson_date',date);
+      lessonQuery=isPrivate?lessonQuery.eq('student_id',studentId):lessonQuery.eq('group_id',s.group_id);
+      const {data:existingLesson,error:lessonLookupError}=await lessonQuery.limit(1).maybeSingle();
+      if(lessonLookupError)throw lessonLookupError;
+      let lessonId=existingLesson?.id;
+      let createdLesson=false;
+      if(!lessonId){
+        const payload={
+          user_id:user.id,
+          title:isPrivate?s.name:(groups.find(g=>g.id===s.group_id)?.name||'حصة مجموعة'),
+          group_id:isPrivate?null:s.group_id,
+          student_id:isPrivate?studentId:null,
+          lesson_date:date,day:weekday,
+          start_time:schedule.start_time,end_time:schedule.end_time
+        };
+        const {data:newLesson,error:createLessonError}=await db.from('lessons').insert(payload).select('id').single();
+        if(createLessonError)throw createLessonError;
+        lessonId=newLesson.id;createdLesson=true;
+      }
+      const {data:oldAttendance,error:attendanceLookupError}=await db.from('lesson_attendance')
+        .select('id,status').eq('lesson_id',lessonId).eq('student_id',studentId).eq('attendance_date',date).limit(1).maybeSingle();
+      if(attendanceLookupError)throw attendanceLookupError;
+      let saveResult=oldAttendance
+        ?await db.from('lesson_attendance').update({status:'Present'}).eq('id',oldAttendance.id)
+        :await db.from('lesson_attendance').insert({student_id:studentId,lesson_id:lessonId,attendance_date:date,status:'Present'});
+      if(saveResult.error){
+        if(createdLesson)await db.from('lessons').delete().eq('id',lessonId).eq('user_id',user.id);
+        throw saveResult.error;
+      }
+      await recalculateStudentLessons(studentId);
+      studentPresentIds.add(studentId);
+    }else{
+      const {data:rows,error:findError}=await db.from('lesson_attendance').select('id')
+        .eq('student_id',studentId).eq('attendance_date',date).eq('status','Present');
+      if(findError)throw findError;
+      const ids=(rows||[]).map(x=>x.id);
+      if(ids.length){
+        const {error:deleteError}=await db.from('lesson_attendance').delete().in('id',ids);
+        if(deleteError)throw deleteError;
+      }
+      await recalculateStudentLessons(studentId);
+      studentPresentIds.delete(studentId);
+    }
+    await loadAdminData();
+  }catch(error){
+    checkbox.checked=!checkbox.checked;
+    alert('تعذر تسجيل الحضور: '+(error?.message||String(error)));
+  }finally{
+    checkbox.disabled=false;
+  }
+}
+$('studentAttendanceDate')?.addEventListener('change',async()=>{
+  await loadStudentAttendanceForDate();
+  renderAdmin();
+  if(typeof renderStudentPackageControls==='function')renderStudentPackageControls();
+});
+
 async function loadAttendance(){const id=$('attendanceLesson').value;$('attendanceRows').innerHTML='';$('saveAttendanceBtn').classList.add('hidden');$('attendanceMsg').textContent='';if(!id)return;const l=lessons.find(x=>x.id===id);if(!l)return;const members=l.student_id?students.filter(s=>s.id===l.student_id):students.filter(s=>s.group_id===l.group_id);if(!members.length){$('attendanceRows').innerHTML='<p>لا يوجد طلاب مرتبطون بهذه الحصة.</p>';return}const {data,error}=await db.from('lesson_attendance').select('id,student_id,status').eq('lesson_id',id).eq('attendance_date',l.lesson_date);if(error){alert(error.message);return}attendanceCache=data||[];$('attendanceRows').innerHTML='<div class="table-wrap"><table><thead><tr><th>الطالب</th><th>الحالة</th></tr></thead><tbody>'+members.map(s=>{const a=attendanceCache.find(x=>x.student_id===s.id);return `<tr><td>${esc(s.name)}</td><td><select class="att-status" data-student="${s.id}" data-row="${a?.id||''}"><option value="Present" ${a?.status==='Present'?'selected':''}>حاضر - تُحسب حصة</option><option value="Absent" ${a?.status==='Absent'?'selected':''}>غائب - تُحسب حصة</option><option value="Excused" ${a?.status==='Excused'?'selected':''}>غائب بإذن - لا تُحسب</option></select></td></tr>`}).join('')+'</tbody></table></div>';$('saveAttendanceBtn').classList.remove('hidden')}
 $('attendanceLesson').addEventListener('change',loadAttendance);
 async function saveAttendance(){const id=$('attendanceLesson').value,l=lessons.find(x=>x.id===id);if(!l)return;const selects=[...document.querySelectorAll('.att-status')];for(const el of selects){const row={student_id:el.dataset.student,lesson_id:id,attendance_date:l.lesson_date,status:el.value};let res=el.dataset.row?await db.from('lesson_attendance').update({status:row.status}).eq('id',el.dataset.row):await db.from('lesson_attendance').insert(row);if(res.error){$('attendanceMsg').textContent='فشل الحفظ: '+res.error.message;return}}for(const el of selects){const sid=el.dataset.student,s=students.find(x=>x.id===sid);if(!s)continue;const {count,error}=await db.from('lesson_attendance').select('id',{count:'exact',head:true}).eq('student_id',sid).in('status',['Present','Absent']).gte('attendance_date',s.package_start_date||'1900-01-01');if(error){$('attendanceMsg').textContent='تم حفظ الحضور لكن تعذر تحديث عداد الحصص: '+error.message;return}const {error:ue}=await db.from('students').update({completed_lessons:count||0}).eq('id',sid).eq('user_id',user.id);if(ue){$('attendanceMsg').textContent=ue.message;return}}$('attendanceMsg').textContent='تم حفظ الحضور وتحديث الحصص بنجاح.';await loadAdminData();await loadAttendance()}
@@ -164,7 +261,7 @@ async function loadAdminData(){
 function renderStudentPackageControls(){
   const rows=[...$('studentsTable').querySelectorAll('tbody tr')];
   students.forEach((s,index)=>{
-    const row=rows[index];if(!row||!row.cells||row.cells.length<11)return;
+    const row=rows[index];if(!row||!row.cells||row.cells.length<12)return;
     const p=getCurrentPackageRecord(s.id);
     const count=getStudentPackageCount(s.id);
     const price=Number(p?.package_price??s.package_price??0);
@@ -173,7 +270,7 @@ function renderStudentPackageControls(){
     row.cells[0].insertAdjacentHTML('beforeend',`<div class="muted small">عدد الباقات: ${count}</div><span class="pill">${packageStatusLabel({payment_status:status})}</span>`);
     row.cells[6].textContent=money(paid);
     row.cells[7].textContent=money(Math.max(0,price-paid));
-    const actions=row.cells[10].querySelector('.actions');
+    const actions=row.cells[11].querySelector('.actions');
     if(actions&&!actions.dataset.packageActions){
       actions.dataset.packageActions='1';
       actions.insertAdjacentHTML('afterbegin',`<button class="success" onclick="setStudentPackagePayment('${s.id}','paid')">تم الدفع</button><button class="danger" onclick="setStudentPackagePayment('${s.id}','unpaid')">لم يتم الدفع</button><button class="secondary" onclick="renewStudentPackage('${s.id}')">تجديد الباقة</button>`);
