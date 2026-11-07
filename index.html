@@ -34,7 +34,8 @@ const SUPABASE_KEY='sb_publishable_LjlqunyD6_OdIizWQ4PDGQ_cssL4Lsy';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const LOGO='https://cdn.phototourl.com/member/2026-11-01-76de4219-b620-4d13-8271-50414c332102.jpg';
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-let user=null,role=null,students=[],groups=[],lessons=[],payments=[],groupSchedules=[],privateSchedules=[],attendanceCache=[];\nlet studentPresentIds=new Set();
+let user=null,role=null,students=[],groups=[],lessons=[],payments=[],groupSchedules=[],privateSchedules=[],attendanceCache=[];
+let studentPresentIds=new Set();
 const $=id=>document.getElementById(id);const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const money=v=>`${Number(v||0).toLocaleString('en-EG')} ج.م`;
 function msg(t,ok=false){$('authMsg').textContent=t;$('authMsg').className=ok?'ok':'err'}
